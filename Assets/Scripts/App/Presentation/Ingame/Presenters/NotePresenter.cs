@@ -31,7 +31,7 @@ namespace App.Presentation.Ingame.Presenters
         private void Bind()
         {
             Observable.EveryUpdate()
-                .Where(_ => ZPosition < -1)
+                .Where(_ => ZPosition < -2)
                 .Subscribe(_ => OnPassedBorder())
                 .AddTo(_noteView);
         }

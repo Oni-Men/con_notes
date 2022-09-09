@@ -19,9 +19,9 @@ namespace App.Domain
 
         public static readonly IReadOnlyDictionary<JudgementType, float> JudgementByDistance = new Dictionary<JudgementType, float>()
         {
-            {JudgementType.Perfect, 0.2f},
-            {JudgementType.Good, 0.5f},
-            {JudgementType.Bad, 1.0f},
+            {JudgementType.Perfect, 0.5f},
+            {JudgementType.Good, 1.0f},
+            {JudgementType.Bad, 5.0f},
         };
     }
 }

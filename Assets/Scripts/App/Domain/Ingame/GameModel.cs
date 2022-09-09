@@ -80,6 +80,9 @@ namespace App.Domain.Ingame
                 AddJudgement(JudgementType.Miss);
             }
             
+            if (IsInsideJudgementArea(JudgementType.Bad, distance)) {
+                _presenter.SpawnParticle(laneId);
+            }
         }
         
         private void AddJudgement(JudgementType type)

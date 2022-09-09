@@ -5,6 +5,7 @@ using App.Domain.Ingame;
 using App.Presentation.Ingame.Views;
 using Cysharp.Threading.Tasks;
 using UniRx;
+using UnityEngine;
 
 namespace App.Presentation.Ingame.Presenters
 {
@@ -53,6 +54,11 @@ namespace App.Presentation.Ingame.Presenters
         {
             var judgementView = _ingameViewRoot.CreateJudgementView(judgementViewModel);
             judgementView.ShowJudgementAsync(judgementViewModel.JudgementType).Forget();
+        }
+
+        public void SpawnParticle(int laneId)
+        {
+            _ingameViewRoot.SpawnParticle(laneId);
         }
     }
 }

@@ -27,6 +27,8 @@ namespace App.Presentation.Ingame.Views
         [SerializeField] private ToriiGenerator toriiGenerator;
         
         [SerializeField] private PlayableDirector playableDirector;
+
+        [SerializeField] private GameObject mapleEffectPrefab;
         
         private GamePresenter _presenter;
         
@@ -68,6 +70,11 @@ namespace App.Presentation.Ingame.Views
         {
             var judgementView = Instantiate(judgementPrefab, viewModel.Position, Quaternion.identity);
             return judgementView;
+        }
+
+        public void SpawnParticle(int laneId) {
+            var pos = new Vector3(laneId, 0, 0);
+            Instantiate(mapleEffectPrefab, pos, Quaternion.identity);
         }
     }
 }
