@@ -28,7 +28,7 @@ namespace App.Presentation.Ingame.Views
         
         [SerializeField] private PlayableDirector playableDirector;
 
-        [SerializeField] private GameObject mapleEffectPrefab;
+        [SerializeField] private ParticleSystem mapleEffectPrefab;
         
         private GamePresenter _presenter;
         
