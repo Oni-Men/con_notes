@@ -1,4 +1,5 @@
 using App.Domain.Ingame.Enums;
+using App.Domain.Notes;
 
 namespace App.Domain.Ingame
 {

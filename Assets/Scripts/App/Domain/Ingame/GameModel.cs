@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using App.Application.Ingame;
 using App.Domain.Ingame.Enums;
+using App.Domain.Notes;
 using App.Presentation.Ingame.Presenters;
 using UniRx;
 
@@ -12,25 +13,20 @@ namespace App.Domain.Ingame
         private Beatmap _beatmap;
 
         private Dictionary<JudgementType, int> _judgeList;
-
         private readonly GamePresenter _presenter;
-
         private readonly ReactiveProperty<int> _score = new();
-
         private readonly ReactiveProperty<int> _currentCombo = new();
-
         private readonly ReactiveProperty<int> _maxCombo = new();
-
+        private Dictionary<int, LaneState> _laneStates ;
 
         public GamePresenter Presenter => _presenter;
-
         public IReadOnlyDictionary<JudgementType, int> JudgementList => _judgeList;
         public IReadOnlyReactiveProperty<int> Score => _score;
         public IReadOnlyReactiveProperty<int> CurrentCombo => _currentCombo;
         public IReadOnlyReactiveProperty<int> MaxCombo => _maxCombo;
 
         public readonly Subject<JudgementViewModel> JudgeNotification  = new();
-        
+
         public GameModel(GamePresenter presenter)
         {
             _presenter = presenter;
@@ -43,6 +39,12 @@ namespace App.Domain.Ingame
             _score.Value = 0;
             _currentCombo.Value = 0;
             _maxCombo.Value = 0;
+            _laneStates = new Dictionary<int, LaneState>()
+            {
+                {-1, new LaneState()},
+                { 0, new LaneState()},
+                { 1, new LaneState()},
+            };
         }
 
         private bool IsInsideJudgementArea(JudgementType judgementType, float distance)
@@ -63,14 +65,36 @@ namespace App.Domain.Ingame
             }
 
             var distance = Math.Abs(nearestNotePresenter.ZPosition);
+            bool success;
+            switch (nearestNotePresenter.Type)
+            {
+                case NoteType.Single:
+                    success = JudgeSingle(distance);
+                    break;
+                case NoteType.Serial:
+                    success = JudgeSerial(distance);
+                    break;
+                default:
+                    success = false;
+                    break;
+            }
+            if (success)
+            {
+                _presenter.SpawnParticle(laneId);
+            }
+
+        }
+
+        private bool JudgeSingle(float distance)
+        {
             if (IsInsideJudgementArea(JudgementType.Perfect, distance))
             {
                 AddJudgement(JudgementType.Perfect);
-            } 
+            }
             else if (IsInsideJudgementArea(JudgementType.Good, distance))
             {
                 AddJudgement(JudgementType.Good);
-            } 
+            }
             else if (IsInsideJudgementArea(JudgementType.Bad, distance))
             {
                 AddJudgement(JudgementType.Bad);
@@ -79,10 +103,15 @@ namespace App.Domain.Ingame
             {
                 AddJudgement(JudgementType.Miss);
             }
+
+            return IsInsideJudgementArea(JudgementType.Bad, distance);
             
-            if (IsInsideJudgementArea(JudgementType.Bad, distance)) {
-                _presenter.SpawnParticle(laneId);
-            }
+        }
+
+        private bool JudgeSerial(float distance)
+        {
+
+            return false;
         }
         
         private void AddJudgement(JudgementType type)

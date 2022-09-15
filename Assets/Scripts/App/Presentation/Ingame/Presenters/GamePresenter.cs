@@ -18,7 +18,6 @@ namespace App.Presentation.Ingame.Presenters
         private readonly InputController _inputController;
         
         private GameModel _gameModel;
-
         public NotePresenters NotePresenters => _notePresenters; 
         
         public GamePresenter(IngameViewRoot ingameViewRoot, StatusViewRoot statusViewRoot, InputController inputController, DebugView debugView)

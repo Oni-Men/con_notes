@@ -1,21 +1,31 @@
+using System;
 using System.Collections.Generic;
 using App.Domain.Ingame.Enums;
+using App.Domain.Notes;
 
 namespace App.Domain
 {
     public class Beatmap
     {
-        public string Title { get; private set; }
-        public string Artist { get; private set; }
-        public int BPM { get; private set; }
-
-        private readonly List<> noteList;
+        public readonly string Title;
+        public readonly string Artist;
+        public readonly int BPM;
+        public readonly int Difficulty;
+        private List<NoteProperty> noteList;
         
-        public Beatmap(string title, string artist, int bpm)
+        public IReadOnlyList<NoteProperty> NoteList => noteList;
+
+        public Beatmap(string title, string artist = "Unkown", int bpm = 130, int difficulty = 1)
         {
             Title = title;
             Artist = artist;
             BPM = bpm;
+            Difficulty = difficulty;
+
+            if (BPM < 1 || BPM > 5)
+            {
+                throw new ArgumentException("BPM should be inside the range 1 to 5.");
+            }
         }
         
     }

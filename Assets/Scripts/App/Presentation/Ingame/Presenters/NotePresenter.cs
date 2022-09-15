@@ -1,6 +1,7 @@
 using App.Domain;
 using App.Domain.Ingame;
 using App.Domain.Ingame.Enums;
+using App.Domain.Notes;
 using App.Presentation.Ingame.Views;
 using UniRx;
 
@@ -13,7 +14,7 @@ namespace App.Presentation.Ingame.Presenters
 
         public int LaneId => _noteModel.LaneId;
         public float ZPosition => _noteView.transform.position.z;
-        
+        public NoteType Type => _noteModel.NoteType;
         public NotePresenter(NoteView noteView)
         {
             _noteView = noteView;
@@ -23,7 +24,7 @@ namespace App.Presentation.Ingame.Presenters
         {
             var game = GameManager.GetInstance().CurrentGame;
             game?.Presenter.NotePresenters.AddNotePresenter(this);
-            _noteModel = new NoteModel(_noteView.LaneId, NoteType.Normal);
+            _noteModel = new NoteModel(_noteView.LaneId, NoteType.Single);
             
             Bind();
         }
