@@ -22,9 +22,9 @@ namespace App.Domain
             BPM = bpm;
             Difficulty = difficulty;
 
-            if (BPM < 1 || BPM > 5)
+            if (Difficulty < 1 || Difficulty > 5)
             {
-                throw new ArgumentException("BPM should be inside the range 1 to 5.");
+                throw new ArgumentException("Difficulty should be inside the range 1 to 5.");
             }
         }
         

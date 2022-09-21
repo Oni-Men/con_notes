@@ -5,6 +5,7 @@ using App.Domain.Ingame.Enums;
 using App.Domain.Notes;
 using App.Presentation.Ingame.Presenters;
 using UniRx;
+using UnityEngine;
 
 namespace App.Domain.Ingame
 {
@@ -17,7 +18,7 @@ namespace App.Domain.Ingame
         private readonly ReactiveProperty<int> _score = new();
         private readonly ReactiveProperty<int> _currentCombo = new();
         private readonly ReactiveProperty<int> _maxCombo = new();
-        private Dictionary<int, LaneState> _laneStates ;
+        private Dictionary<int, LaneState> _laneStates;
 
         public GamePresenter Presenter => _presenter;
         public IReadOnlyDictionary<JudgementType, int> JudgementList => _judgeList;
@@ -25,7 +26,7 @@ namespace App.Domain.Ingame
         public IReadOnlyReactiveProperty<int> CurrentCombo => _currentCombo;
         public IReadOnlyReactiveProperty<int> MaxCombo => _maxCombo;
 
-        public readonly Subject<JudgementViewModel> JudgeNotification  = new();
+        public readonly Subject<JudgementViewModel> JudgeNotification = new();
 
         public GameModel(GamePresenter presenter)
         {
@@ -41,21 +42,32 @@ namespace App.Domain.Ingame
             _maxCombo.Value = 0;
             _laneStates = new Dictionary<int, LaneState>()
             {
-                {-1, new LaneState()},
-                { 0, new LaneState()},
-                { 1, new LaneState()},
+                { -1, new LaneState() },
+                { 0, new LaneState() },
+                { 1, new LaneState() },
             };
         }
 
-        private bool IsInsideJudgementArea(JudgementType judgementType, float distance)
+        public void PressLane(int laneId)
         {
-            if (judgementType == JudgementType.Miss)
+            if (!_laneStates.ContainsKey(laneId))
             {
-                return true;
+                throw new ArgumentException("No such laneId");
             }
-            return distance < GameConst.JudgementByDistance[judgementType];
+
+            _laneStates[laneId].Press();
         }
-        
+
+        public void ReleaseLane(int laneId)
+        {
+            if (!_laneStates.ContainsKey(laneId))
+            {
+                throw new ArgumentException("No such laneId");
+            }
+
+            _laneStates[laneId].Release();
+        }
+
         public void DoJudge(int laneId)
         {
             var nearestNotePresenter = _presenter.NotePresenters.GetNearestNotePresenter(laneId);
@@ -65,53 +77,14 @@ namespace App.Domain.Ingame
             }
 
             var distance = Math.Abs(nearestNotePresenter.ZPosition);
-            bool success;
-            switch (nearestNotePresenter.Type)
-            {
-                case NoteType.Single:
-                    success = JudgeSingle(distance);
-                    break;
-                case NoteType.Serial:
-                    success = JudgeSerial(distance);
-                    break;
-                default:
-                    success = false;
-                    break;
-            }
-            if (success)
-            {
-                _presenter.SpawnParticle(laneId);
-            }
 
-        }
+            var judgementType = nearestNotePresenter.Judge(distance);
+            AddJudgement(judgementType);
 
-        private bool JudgeSingle(float distance)
-        {
-            if (IsInsideJudgementArea(JudgementType.Perfect, distance))
+            if (judgementType != JudgementType.Miss)
             {
-                AddJudgement(JudgementType.Perfect);
+                _presenter.SpawnParticle(laneId, judgementType);
             }
-            else if (IsInsideJudgementArea(JudgementType.Good, distance))
-            {
-                AddJudgement(JudgementType.Good);
-            }
-            else if (IsInsideJudgementArea(JudgementType.Bad, distance))
-            {
-                AddJudgement(JudgementType.Bad);
-            }
-            else
-            {
-                AddJudgement(JudgementType.Miss);
-            }
-
-            return IsInsideJudgementArea(JudgementType.Bad, distance);
-            
-        }
-
-        private bool JudgeSerial(float distance)
-        {
-
-            return false;
         }
         
         private void AddJudgement(JudgementType type)
@@ -139,7 +112,7 @@ namespace App.Domain.Ingame
             var point = GetPointForJudge(type);
             var bonus = CalcBonusAmount(point);
             _score.Value += point + bonus;
-            
+
             _presenter.UpdateComboCount(_currentCombo.Value);
         }
 
@@ -147,7 +120,7 @@ namespace App.Domain.Ingame
         {
             return value * _currentCombo.Value;
         }
-        
+
         private static int GetPointForJudge(JudgementType type)
         {
             if (!GameConst.PointForJudge.ContainsKey(type))
@@ -156,6 +129,19 @@ namespace App.Domain.Ingame
             }
 
             return GameConst.PointForJudge[type];
+        }
+
+        public string GetRank()
+        {
+            foreach (var pair in GameConst.RankToScoreMap)
+            {
+                if (_score.Value >= pair.Value)
+                {
+                    return pair.Key;
+                }
+            }
+
+            return "???";
         }
     }
 }

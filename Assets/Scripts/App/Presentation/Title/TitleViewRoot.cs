@@ -1,4 +1,7 @@
+using System;
+using Cysharp.Threading.Tasks;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
@@ -11,12 +14,14 @@ namespace App.Presentation.Title
         [SerializeField] private Button startButton;
 
         [SerializeField] private Button extiButton;
-    
+
+        [SerializeField] private GameObject clickEffect;
+
         void Awake()
         {
             startButton.OnClickAsObservable().Subscribe(_ => ShowIngameScene()).AddTo(this);
             extiButton.OnClickAsObservable().Subscribe(_ => ExitGame()).AddTo(this);
-        
+
             LoadBeatmaps();
         }
 
@@ -29,12 +34,13 @@ namespace App.Presentation.Title
                 Debug.Log(playableAsset.name);
             }
         }
-    
-        private void ShowSongSelectionScene() {}
 
         private void ShowIngameScene()
         {
-            SceneManager.LoadScene("IngameScene");
+            UniTask.Delay(TimeSpan.FromSeconds(2)).ToObservable().Subscribe(_ =>
+            {
+                SceneManager.LoadScene("IngameScene");
+            });
         }
 
         private void ExitGame()

@@ -9,12 +9,12 @@ namespace App.Presentation.Ingame.Presenters
 {
     public class NotePresenter
     {
-        private NoteModel _noteModel;
+        private NoteModelBase _noteModelBase;
         private NoteView _noteView;
 
-        public int LaneId => _noteModel.LaneId;
+        public int LaneId => _noteModelBase.LaneId;
         public float ZPosition => _noteView.transform.position.z;
-        public NoteType Type => _noteModel.NoteType;
+        public NoteType Type => _noteModelBase.NoteType;
         public NotePresenter(NoteView noteView)
         {
             _noteView = noteView;
@@ -24,8 +24,7 @@ namespace App.Presentation.Ingame.Presenters
         {
             var game = GameManager.GetInstance().CurrentGame;
             game?.Presenter.NotePresenters.AddNotePresenter(this);
-            _noteModel = new NoteModel(_noteView.LaneId, NoteType.Single);
-            
+            _noteModelBase = new SingleNoteModelBase(_noteView.LaneId);
             Bind();
         }
 
@@ -44,6 +43,11 @@ namespace App.Presentation.Ingame.Presenters
             Dispose();
         }
 
+        public JudgementType Judge(float distance)
+        {
+            return _noteModelBase.Judge(distance);
+        }
+        
         public void Dispose()
         {
             _noteView.Dispose();

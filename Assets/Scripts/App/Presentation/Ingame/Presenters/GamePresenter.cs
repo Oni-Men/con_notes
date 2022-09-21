@@ -2,6 +2,7 @@ using App.Application.Ingame;
 using App.Common;
 using App.Domain;
 using App.Domain.Ingame;
+using App.Domain.Ingame.Enums;
 using App.Presentation.Ingame.Views;
 using Cysharp.Threading.Tasks;
 using UniRx;
@@ -16,11 +17,12 @@ namespace App.Presentation.Ingame.Presenters
         private readonly StatusViewRoot _statusViewRoot;
         private readonly NotePresenters _notePresenters;
         private readonly InputController _inputController;
-        
+
         private GameModel _gameModel;
-        public NotePresenters NotePresenters => _notePresenters; 
-        
-        public GamePresenter(IngameViewRoot ingameViewRoot, StatusViewRoot statusViewRoot, InputController inputController, DebugView debugView)
+        public NotePresenters NotePresenters => _notePresenters;
+
+        public GamePresenter(IngameViewRoot ingameViewRoot, StatusViewRoot statusViewRoot,
+            InputController inputController, DebugView debugView)
         {
             _ingameViewRoot = ingameViewRoot;
             _debugView = debugView;
@@ -31,7 +33,7 @@ namespace App.Presentation.Ingame.Presenters
 
         public void Initialize()
         {
-            _gameModel =  GameManager.GetInstance().StartGame(this);
+            _gameModel = GameManager.GetInstance().StartGame(this);
             _notePresenters.Initialize();
             Bind();
         }
@@ -42,6 +44,25 @@ namespace App.Presentation.Ingame.Presenters
             _gameModel.Score.Subscribe(score => _statusViewRoot.UpdateScore(score)).AddTo(_statusViewRoot);
             _gameModel.CurrentCombo.Subscribe(combo => _statusViewRoot.UpdateCombo(combo)).AddTo(_statusViewRoot);
             _gameModel.MaxCombo.Subscribe(maxCombo => _statusViewRoot.UpdateMaxCombo(maxCombo)).AddTo(_statusViewRoot);
+
+            _inputController.LaneStateObserver.Subscribe(laneState =>
+            {
+                if (laneState.IsPressed)
+                {
+                    _gameModel.PressLane(laneState.LaneId);
+                    _gameModel.DoJudge(laneState.LaneId);
+                }
+                else
+                {
+                    _gameModel.ReleaseLane(laneState.LaneId);
+                }
+            }).AddTo(_inputController);
+            
+            _ingameViewRoot.EndPlayingEvent.Subscribe(_ =>
+            {
+                //TODO ゲーム終了処理
+                Debug.Log("end playing event");
+            });
         }
 
         public void UpdateComboCount(int combo)
@@ -55,9 +76,23 @@ namespace App.Presentation.Ingame.Presenters
             judgementView.ShowJudgementAsync(judgementViewModel.JudgementType).Forget();
         }
 
-        public void SpawnParticle(int laneId)
+        public void SpawnParticle(int laneId, JudgementType type)
         {
-            _ingameViewRoot.SpawnParticle(laneId);
+            var amount = 0f;
+            switch (type)
+            {
+                case JudgementType.Perfect:
+                    amount = 1f;
+                    break;
+                case JudgementType.Good:
+                    amount = 0.5f;
+                    break;
+                case JudgementType.Bad:
+                    amount = 0.25f;
+                    break;
+            }
+
+            _ingameViewRoot.SpawnParticle(laneId, amount);
         }
     }
 }

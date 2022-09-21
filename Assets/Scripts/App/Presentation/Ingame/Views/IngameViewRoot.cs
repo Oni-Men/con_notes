@@ -1,7 +1,10 @@
+using System;
 using System.Linq;
 using App.Application.Ingame;
 using App.Common;
 using App.Presentation.Ingame.Presenters;
+using Cysharp.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -31,7 +34,10 @@ namespace App.Presentation.Ingame.Views
         [SerializeField] private ParticleSystem mapleEffectPrefab;
         
         private GamePresenter _presenter;
-        
+
+        private Subject<Unit> _endPlayingEvent = new Subject<Unit>();
+        public IObservable<Unit> EndPlayingEvent => _endPlayingEvent;
+
         void Awake()
         {
             _presenter = new GamePresenter(this, statusViewRoot, inputController, debugView);
@@ -62,8 +68,10 @@ namespace App.Presentation.Ingame.Views
                 
             }
 
+
             playableDirector.playableAsset = beatmap;
             playableDirector.Play();
+            
         }
 
         public JudgementView CreateJudgementView(JudgementViewModel viewModel)
@@ -72,7 +80,7 @@ namespace App.Presentation.Ingame.Views
             return judgementView;
         }
 
-        public void SpawnParticle(int laneId) {
+        public void SpawnParticle(int laneId, float amount) {
             var pos = new Vector3(laneId, 0, 0);
             Instantiate(mapleEffectPrefab, pos, Quaternion.identity);
         }

@@ -1,65 +1,58 @@
 using System;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 namespace App.Common
 {
     public class InputController : MonoBehaviour
     {
-        private Dictionary<int, bool> laneState;
-        private Subject<IReadOnlyDictionary<int, bool>> laneStateSubject;
-
-        public IObservable<IReadOnlyDictionary<int, bool>> laneStateObserver => laneStateSubject;
-
-        void Awake()
+        public class LaneStateData
         {
-            laneStateSubject = new();
-            laneState = new()
+            public readonly int LaneId;
+            public readonly bool IsPressed;
+
+            public LaneStateData(int laneId, bool isPressed)
             {
-                { -1, false },
-                { 0, false },
-                { 1, false },
-            };
+                LaneId = laneId;
+                IsPressed = isPressed;
+            }
         }
+        
+        private Subject<LaneStateData> _laneState;
+
+        public IObservable<LaneStateData> LaneStateObserver => _laneState = new();
 
         void Update()
         {
-
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                laneState[-1] = true;
-                laneStateSubject.OnNext(laneState);
+                _laneState.OnNext(new LaneStateData(-1, true));
             }
 
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                laneState[0] = true;
-                laneStateSubject.OnNext(laneState);
+                _laneState.OnNext(new LaneStateData(0, true));
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                laneState[1] = true;
-                laneStateSubject.OnNext(laneState);
+                _laneState.OnNext(new LaneStateData(1, true));
             }
-
 
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
-                laneState[-1] = false;
-                laneStateSubject.OnNext(laneState);
+                _laneState.OnNext(new LaneStateData(-1, false));
             }
 
             if (Input.GetKeyUp(KeyCode.UpArrow))
             {
-                laneState[0] = false;
-                laneStateSubject.OnNext(laneState);
+                _laneState.OnNext(new LaneStateData(0, false));
             }
 
             if (Input.GetKeyUp(KeyCode.RightArrow))
             {
-                laneState[1] = false;
-                laneStateSubject.OnNext(laneState);
+                _laneState.OnNext(new LaneStateData(1, false));
             }
         }
     }
