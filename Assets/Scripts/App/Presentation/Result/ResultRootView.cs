@@ -1,5 +1,6 @@
 using System;
 using App.Domain;
+using App.Domain.Ingame;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -20,6 +21,15 @@ namespace App.Presentation.Result
 
         [SerializeField] private Button titleButton;
 
+        private AudioClip _successBgm;
+        private AudioClip _failBgm;
+        
+        void Awake()
+        {
+            _failBgm = Resources.Load<AudioClip>("Sounds/sound_fail.mp3");
+            _successBgm = Resources.Load<AudioClip>("Sounds/sound_success.mp3");
+        }
+        
         void Start()
         {
             var gameManager = GameManager.GetInstance();
@@ -33,6 +43,15 @@ namespace App.Presentation.Result
             var maxCombo = currentGame.MaxCombo.Value;
             var rank = currentGame.GetRank();
 
+            if (currentGame.Success)
+            {
+               AudioSource.PlayClipAtPoint(_successBgm, Vector3.zero);
+            }
+            else
+            {
+                AudioSource.PlayClipAtPoint(_failBgm, Vector3.zero);
+            }
+            
             scoreText.text = $"{score} ポイント";
             rankText.text = rank;
             maxComboText.text = $"{maxCombo} コンボ";

@@ -35,7 +35,7 @@ namespace App.Presentation.Ingame.Views
         
         private GamePresenter _presenter;
 
-        private Subject<Unit> _endPlayingEvent = new Subject<Unit>();
+        private readonly Subject<Unit> _endPlayingEvent = new Subject<Unit>();
         public IObservable<Unit> EndPlayingEvent => _endPlayingEvent;
 
         void Awake()
@@ -53,7 +53,7 @@ namespace App.Presentation.Ingame.Views
         private void BindBeatmap()
         {
             //TODO 今のところ一曲のみ。選曲機能を実装して、複数曲プレイできるようにする
-            var beatmap = Resources.Load<PlayableAsset>("Songs/和のEDM/和のEDM");
+            var beatmap = Resources.Load<PlayableAsset>("Songs/紅葉の花束/map");
             var signalBindings = beatmap.outputs.Where(binding => binding.sourceObject is SignalTrack);
             foreach (var binding in signalBindings)
             {

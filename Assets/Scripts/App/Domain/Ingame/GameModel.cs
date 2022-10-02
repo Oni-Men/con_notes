@@ -18,6 +18,7 @@ namespace App.Domain.Ingame
         private readonly ReactiveProperty<int> _score = new();
         private readonly ReactiveProperty<int> _currentCombo = new();
         private readonly ReactiveProperty<int> _maxCombo = new();
+        private readonly ReactiveProperty<int> _healthLevel = new();
         private Dictionary<int, LaneState> _laneStates;
 
         public GamePresenter Presenter => _presenter;
@@ -27,7 +28,10 @@ namespace App.Domain.Ingame
         public IReadOnlyReactiveProperty<int> MaxCombo => _maxCombo;
 
         public readonly Subject<JudgementViewModel> JudgeNotification = new();
+        public  IReadOnlyReactiveProperty<int> HealthLevel => _healthLevel;
 
+        public bool Success => _healthLevel.Value > 0; 
+        
         public GameModel(GamePresenter presenter)
         {
             _presenter = presenter;
