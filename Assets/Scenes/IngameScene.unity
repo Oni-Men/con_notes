@@ -5356,7 +5356,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 50
   orthographic: 0
   orthographic size: 157.77
   m_Depth: -1
@@ -5381,14 +5381,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.97, z: -6.67}
+  m_LocalRotation: {x: 0.06364922, y: -0, z: -0, w: 0.99797237}
+  m_LocalPosition: {x: 0, y: 2.95, z: -6.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 7.299, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5480,6 +5480,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 2868984282514854962, guid: f1c4e90f100801246ac9bc38e8a7d473, type: 3}
+  flyingText: {fileID: 6580153564274336425, guid: 2c5e49a31d2996240bde96e9b4856a41, type: 3}
+  perfectMaterial: {fileID: 2100000, guid: d11108a494604f048b7341a067bbd492, type: 2}
+  goodMaterial: {fileID: 2100000, guid: f933a9bbd3017c7478739201df5c511f, type: 2}
+  badMaterial: {fileID: 2100000, guid: 9ac3cee82b89eb74abb6cbf1c96b1bed, type: 2}
+  missMaterial: {fileID: 2100000, guid: 1fdb5f17701001842b9ebcf7a0542062, type: 2}
 --- !u!4 &1147410754
 Transform:
   m_ObjectHideFlags: 0

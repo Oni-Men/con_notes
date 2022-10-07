@@ -19,10 +19,19 @@ namespace App.Domain
 
         public static readonly IReadOnlyDictionary<JudgementType, float> JudgementThresholds = new Dictionary<JudgementType, float>()
         {
-            {JudgementType.Perfect, 0.25f},
-            {JudgementType.Good, 0.5f},
-            {JudgementType.Bad, 1.0f},
+            {JudgementType.Perfect, 1f},
+            {JudgementType.Good, 1.5f},
+            {JudgementType.Bad, 2.0f},
         };
+
+        public static readonly IReadOnlyDictionary<JudgementType, string> JudgementText =
+            new Dictionary<JudgementType, string>()
+            {
+                { JudgementType.Perfect, "最高" },
+                { JudgementType.Good, "良" },
+                { JudgementType.Bad, "不良" },
+                { JudgementType.Miss, "失敗" },
+            };
 
         public static readonly IReadOnlyDictionary<string, int> RankToScoreMap = new Dictionary<string, int>()
         {

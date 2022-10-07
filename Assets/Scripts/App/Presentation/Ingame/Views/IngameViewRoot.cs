@@ -2,11 +2,14 @@ using System;
 using System.Linq;
 using App.Application.Ingame;
 using App.Common;
+using App.Domain;
+using App.Domain.Ingame.Enums;
 using App.Presentation.Ingame.Presenters;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.PlayerLoop;
 using UnityEngine.Timeline;
 
 
@@ -74,15 +77,29 @@ namespace App.Presentation.Ingame.Views
             
         }
 
-        public JudgementView CreateJudgementView(JudgementViewModel viewModel)
-        {
-            var judgementView = Instantiate(judgementPrefab, viewModel.Position, Quaternion.identity);
-            return judgementView;
-        }
-
         public void SpawnParticle(int laneId, float amount) {
             var pos = new Vector3(laneId, 0, 0);
             Instantiate(mapleEffectPrefab, pos, Quaternion.identity);
+        }
+
+        public void SpawnFlyingText(int laneId, JudgementType type)
+        {
+            if (!GameConst.JudgementText.ContainsKey(type))
+            {
+                return;
+            }
+            
+            if (noteGenerator.JudgementAndMaterials[type] == null) {
+                return;
+            }
+            
+            Debug.Log($"Lane: {laneId}, Type: {type}");
+            
+            var pos = new Vector3(laneId, 0, 0);
+            var text = GameConst.JudgementText[type];
+            var material = noteGenerator.JudgementAndMaterials[type];
+            
+            noteGenerator.SpawnFlyingText(pos, text, material);
         }
     }
 }

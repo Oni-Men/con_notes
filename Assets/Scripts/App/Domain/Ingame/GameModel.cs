@@ -84,11 +84,15 @@ namespace App.Domain.Ingame
 
             var judgementType = nearestNotePresenter.Judge(distance);
             AddJudgement(judgementType);
+            
+            //Debug.Log(judgementType);
 
             if (judgementType != JudgementType.Miss)
             {
                 _presenter.SpawnParticle(laneId, judgementType);
             }
+            
+            JudgeNotification.OnNext(new JudgementViewModel(laneId, judgementType));
         }
         
         private void AddJudgement(JudgementType type)

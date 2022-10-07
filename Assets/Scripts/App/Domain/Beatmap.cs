@@ -15,7 +15,7 @@ namespace App.Domain
         
         public IReadOnlyList<NoteProperty> NoteList => noteList;
 
-        public Beatmap(string title, string artist = "Unkown", int bpm = 130, int difficulty = 1)
+        public Beatmap(string title, string artist = "Unknown", int bpm = 130, int difficulty = 1)
         {
             Title = title;
             Artist = artist;

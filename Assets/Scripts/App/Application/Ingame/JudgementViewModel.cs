@@ -5,12 +5,12 @@ namespace App.Application.Ingame
 {
     public readonly struct JudgementViewModel
     {
-        public readonly Vector3 Position;
+        public readonly int LaneId;
         public readonly JudgementType JudgementType;
 
-        public JudgementViewModel(Vector3 position, JudgementType judgementType)
+        public JudgementViewModel(int laneId, JudgementType judgementType)
         {
-            Position = position;
+            LaneId = laneId;
             JudgementType = judgementType;
         }
     }

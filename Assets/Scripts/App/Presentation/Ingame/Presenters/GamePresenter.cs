@@ -40,7 +40,10 @@ namespace App.Presentation.Ingame.Presenters
 
         private void Bind()
         {
-            _gameModel.JudgeNotification.Subscribe(ShowJudgementAsync);
+            _gameModel.JudgeNotification.Subscribe(viewModel =>
+            {
+                ShowPopup(viewModel.LaneId, viewModel.JudgementType);
+            });
             _gameModel.Score.Subscribe(score => _statusViewRoot.UpdateScore(score)).AddTo(_statusViewRoot);
             _gameModel.CurrentCombo.Subscribe(combo => _statusViewRoot.UpdateCombo(combo)).AddTo(_statusViewRoot);
             _gameModel.MaxCombo.Subscribe(maxCombo => _statusViewRoot.UpdateMaxCombo(maxCombo)).AddTo(_statusViewRoot);
@@ -63,6 +66,7 @@ namespace App.Presentation.Ingame.Presenters
                 //TODO ゲーム終了処理
                 Debug.Log("end playing event");
             });
+            
         }
 
         public void UpdateComboCount(int combo)
@@ -70,10 +74,9 @@ namespace App.Presentation.Ingame.Presenters
             _statusViewRoot.UpdateCombo(combo);
         }
 
-        private void ShowJudgementAsync(JudgementViewModel judgementViewModel)
+        private void ShowPopup(int laneId, JudgementType type)
         {
-            var judgementView = _ingameViewRoot.CreateJudgementView(judgementViewModel);
-            judgementView.ShowJudgementAsync(judgementViewModel.JudgementType).Forget();
+            _ingameViewRoot.SpawnFlyingText(laneId, type);
         }
 
         public void SpawnParticle(int laneId, JudgementType type)

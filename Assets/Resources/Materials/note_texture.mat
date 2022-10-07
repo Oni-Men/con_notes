@@ -58,13 +58,13 @@ Material:
     - _DstBlend: 1
     - _EmissionEnabled: 0
     - _FlipbookMode: 0
-    - _Glossiness: 1
+    - _Glossiness: 0
     - _LightingEnabled: 1
     - _Metallic: 0
     - _Mode: 4
     - _SoftParticlesEnabled: 0
-    - _SoftParticlesFarFadeDistance: 1
-    - _SoftParticlesNearFadeDistance: 0
+    - _SoftParticlesFarFadeDistance: 92.68
+    - _SoftParticlesNearFadeDistance: 0.11
     - _SrcBlend: 5
     - _ZWrite: 0
     m_Colors:
