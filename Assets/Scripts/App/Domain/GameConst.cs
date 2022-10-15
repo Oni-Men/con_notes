@@ -27,22 +27,21 @@ namespace App.Domain
         public static readonly IReadOnlyDictionary<JudgementType, string> JudgementText =
             new Dictionary<JudgementType, string>()
             {
-                { JudgementType.Perfect, "最高" },
-                { JudgementType.Good, "良" },
-                { JudgementType.Bad, "不良" },
-                { JudgementType.Miss, "失敗" },
+                { JudgementType.Perfect, "秀" },
+                { JudgementType.Good, "優" },
+                { JudgementType.Bad, "可" },
+                { JudgementType.Miss, "不可" },
             };
 
         public static readonly IReadOnlyDictionary<string, int> RankToScoreMap = new Dictionary<string, int>()
         {
-            {"S++", 1300 },
-            {"S+", 1200 },
-            {"S", 1000 },
-            {"A", 800 },
-            {"B", 700 },
-            {"C", 1000 },
-            {"D", 1000 },
-            {"E", 1000 },
+            {"秀+", 1300 },
+            {"秀", 1200 },
+            {"優+", 1000 },
+            {"優", 800 },
+            {"可+", 700 },
+            {"可", 500 },
+            {"不可", 100 },
         };
     }
 }

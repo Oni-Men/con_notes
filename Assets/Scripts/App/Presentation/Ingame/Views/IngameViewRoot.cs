@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using App.Application.Ingame;
 using App.Common;
 using App.Domain;
 using App.Domain.Ingame.Enums;
@@ -9,7 +8,6 @@ using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.PlayerLoop;
 using UnityEngine.Timeline;
 
 
@@ -23,9 +21,6 @@ namespace App.Presentation.Ingame.Views
         [SerializeField]
         private StatusViewRoot statusViewRoot;
         
-        [SerializeField]
-        private DebugView debugView;
-
         [SerializeField] private JudgementView judgementPrefab;
         
         [SerializeField] private Generator noteGenerator;
@@ -38,15 +33,31 @@ namespace App.Presentation.Ingame.Views
         
         private GamePresenter _presenter;
 
-        private readonly Subject<Unit> _endPlayingEvent = new Subject<Unit>();
+        private readonly Subject<Unit> _endPlayingEvent = new();
         public IObservable<Unit> EndPlayingEvent => _endPlayingEvent;
 
         void Awake()
         {
-            _presenter = new GamePresenter(this, statusViewRoot, inputController, debugView);
+            _presenter = new GamePresenter(this, statusViewRoot, inputController);
             _presenter.Initialize();
             
-            BindBeatmap();
+            //BindBeatmap();
+
+        }
+
+        void Start()
+        {
+            // 5秒後に音楽を再生する
+            Observable.Timer(TimeSpan.FromSeconds(5)).Subscribe(_ =>
+            {
+                playableDirector.Play();
+            });
+
+            // 音楽の再生が終わったらイベントを発行する
+            playableDirector.stopped += p =>
+            {
+                _endPlayingEvent.OnNext(Unit.Default);
+            };
         }
 
         /*

@@ -1,10 +1,8 @@
-using App.Application.Ingame;
 using App.Common;
 using App.Domain;
 using App.Domain.Ingame;
 using App.Domain.Ingame.Enums;
 using App.Presentation.Ingame.Views;
-using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 
@@ -12,7 +10,6 @@ namespace App.Presentation.Ingame.Presenters
 {
     public class GamePresenter
     {
-        private readonly DebugView _debugView;
         private readonly IngameViewRoot _ingameViewRoot;
         private readonly StatusViewRoot _statusViewRoot;
         private readonly NotePresenters _notePresenters;
@@ -22,10 +19,9 @@ namespace App.Presentation.Ingame.Presenters
         public NotePresenters NotePresenters => _notePresenters;
 
         public GamePresenter(IngameViewRoot ingameViewRoot, StatusViewRoot statusViewRoot,
-            InputController inputController, DebugView debugView)
+            InputController inputController)
         {
             _ingameViewRoot = ingameViewRoot;
-            _debugView = debugView;
             _statusViewRoot = statusViewRoot;
             _inputController = inputController;
             _notePresenters = new NotePresenters();
@@ -65,6 +61,7 @@ namespace App.Presentation.Ingame.Presenters
             {
                 //TODO ゲーム終了処理
                 Debug.Log("end playing event");
+                OnGameEnd();
             });
             
         }
@@ -96,6 +93,15 @@ namespace App.Presentation.Ingame.Presenters
             }
 
             _ingameViewRoot.SpawnParticle(laneId, amount);
+        }
+
+        private void OnGameEnd()
+        {   
+            // リザルト情報を保存
+
+            // フェードアウト演出
+            
+            // リザルトシーンへ遷移
         }
     }
 }

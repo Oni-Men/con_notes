@@ -13,7 +13,7 @@ namespace App.Presentation.Ingame.Views
         private void Start()
         {
             this.transform
-                .DOMoveY(1f, 1f)
+                .DOMoveZ(-0.5f, 1f)
                 .SetEase(Ease.OutQuint)
                 .OnComplete(() =>
                 {
@@ -28,7 +28,7 @@ namespace App.Presentation.Ingame.Views
 
         public void SetMaterial(Material material)
         {
-            tmpText.material = material;
+            tmpText.fontMaterial = material;
         }
     }
 }
