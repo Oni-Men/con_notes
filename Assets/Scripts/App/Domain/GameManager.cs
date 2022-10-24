@@ -7,6 +7,8 @@ namespace App.Domain
     {
         private static GameManager _instance = new GameManager();
 
+        public static bool ShouldPlayCutIn = true;
+        
         public static GameManager GetInstance()
         {
             return _instance;
@@ -14,8 +16,6 @@ namespace App.Domain
 
         public GameModel CurrentGame { get; private set; }
 
-        public Beatmap CurrentBeatmap;
-        
         private GameManager()
         {
             CurrentGame = null;
@@ -27,6 +27,7 @@ namespace App.Domain
             CurrentGame.Initialize();
             return CurrentGame;
         }
+        
         
     }
 }

@@ -1,10 +1,8 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UniRx;
-using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 namespace App.Presentation.Title
@@ -13,26 +11,14 @@ namespace App.Presentation.Title
     {
         [SerializeField] private Button startButton;
 
-        [SerializeField] private Button extiButton;
+        [SerializeField] private Button exitButton;
 
         [SerializeField] private GameObject clickEffect;
 
         void Awake()
         {
             startButton.OnClickAsObservable().Subscribe(_ => ShowIngameScene()).AddTo(this);
-            extiButton.OnClickAsObservable().Subscribe(_ => ExitGame()).AddTo(this);
-
-            LoadBeatmaps();
-        }
-
-        private void LoadBeatmaps()
-        {
-            var playableAssets = Resources.LoadAll<TimelineAsset>("Songs");
-
-            foreach (var playableAsset in playableAssets)
-            {
-                Debug.Log(playableAsset.name);
-            }
+            exitButton.OnClickAsObservable().Subscribe(_ => ExitGame()).AddTo(this);
         }
 
         private void ShowIngameScene()
@@ -46,7 +32,6 @@ namespace App.Presentation.Title
         private void ExitGame()
         {
             //TODO Impl exit process.
-            UnityEditor.EditorApplication.isPlaying = false;
             UnityEngine.Application.Quit();
         }
     }

@@ -1,6 +1,5 @@
 using System;
 using App.Domain;
-using App.Domain.Ingame;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -11,26 +10,20 @@ namespace App.Presentation.Result
 {
     public class ResultRootView : MonoBehaviour
     {
-        [SerializeField] private TextMeshPro scoreText;
+        [SerializeField] private TMP_Text scoreText;
 
-        [SerializeField] private TextMeshPro rankText;
+        [SerializeField] private TMP_Text rankText;
 
-        [SerializeField] private TextMeshPro maxComboText;
+        [SerializeField] private TMP_Text maxComboText;
 
         [SerializeField] private Button retryButton;
 
         [SerializeField] private Button titleButton;
 
-        private AudioClip _successBgm;
-        private AudioClip _failBgm;
+        [SerializeField] private AudioClip successBgm;
+        [SerializeField] private AudioClip failBgm;
         
-        void Awake()
-        {
-            _failBgm = Resources.Load<AudioClip>("Sounds/sound_fail.mp3");
-            _successBgm = Resources.Load<AudioClip>("Sounds/sound_success.mp3");
-        }
-        
-        void Start()
+        void OnEnable()
         {
             var gameManager = GameManager.GetInstance();
             var currentGame = gameManager.CurrentGame;
@@ -43,13 +36,13 @@ namespace App.Presentation.Result
             var maxCombo = currentGame.MaxCombo.Value;
             var rank = currentGame.GetRank();
 
-            if (currentGame.Success)
+            if (currentGame.IsAlive && !rank.Equals("不可"))
             {
-               AudioSource.PlayClipAtPoint(_successBgm, Vector3.zero);
+               AudioSource.PlayClipAtPoint(successBgm, Vector3.zero);
             }
             else
             {
-                AudioSource.PlayClipAtPoint(_failBgm, Vector3.zero);
+                AudioSource.PlayClipAtPoint(failBgm, Vector3.zero);
             }
             
             scoreText.text = $"{score} ポイント";
@@ -62,6 +55,7 @@ namespace App.Presentation.Result
 
         private void ShowRetryScene()
         {
+            GameManager.ShouldPlayCutIn = false;
             SceneManager.LoadScene("IngameScene");
         }
 

@@ -35,13 +35,13 @@ namespace App.Domain
 
         public static readonly IReadOnlyDictionary<string, int> RankToScoreMap = new Dictionary<string, int>()
         {
-            {"秀+", 1300 },
-            {"秀", 1200 },
-            {"優+", 1000 },
-            {"優", 800 },
-            {"可+", 700 },
-            {"可", 500 },
-            {"不可", 100 },
+            {"秀+", 21000 },
+            {"秀", 17000 },
+            {"優+", 13000 },
+            {"優", 9000 },
+            {"可+", 5000 },
+            {"可", 1000 },
+            {"不可", 0 },
         };
     }
 }

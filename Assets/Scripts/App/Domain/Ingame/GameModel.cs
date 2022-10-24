@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using App.Application.Ingame;
 using App.Domain.Ingame.Enums;
-using App.Domain.Notes;
 using App.Presentation.Ingame.Presenters;
 using UniRx;
 using UnityEngine;
@@ -11,8 +10,6 @@ namespace App.Domain.Ingame
 {
     public class GameModel
     {
-        private Beatmap _beatmap;
-
         private Dictionary<JudgementType, int> _judgeList;
         private readonly GamePresenter _presenter;
         private readonly ReactiveProperty<int> _score = new();
@@ -29,13 +26,15 @@ namespace App.Domain.Ingame
 
         public readonly Subject<JudgementViewModel> JudgeNotification = new();
         public  IReadOnlyReactiveProperty<int> HealthLevel => _healthLevel;
+        
+        public bool IsAlive => _healthLevel.Value > 0;
 
-        public bool Success => _healthLevel.Value > 0; 
+        private Subject<Unit> _gameFailEvent = new();
+        public IObservable<Unit> GameFailEvent => _gameFailEvent;
         
         public GameModel(GamePresenter presenter)
         {
             _presenter = presenter;
-            _beatmap = null;
         }
 
         public void Initialize()
@@ -44,6 +43,7 @@ namespace App.Domain.Ingame
             _score.Value = 0;
             _currentCombo.Value = 0;
             _maxCombo.Value = 0;
+            _healthLevel.Value = 100;
             _laneStates = new Dictionary<int, LaneState>()
             {
                 { -1, new LaneState() },
@@ -81,17 +81,29 @@ namespace App.Domain.Ingame
             }
 
             var distance = Math.Abs(nearestNotePresenter.ZPosition);
-
+            if (distance > GameConst.JudgementThresholds[JudgementType.Bad] * 10)
+            {
+                return;
+            }
+            
             var judgementType = nearestNotePresenter.Judge(distance);
             AddJudgement(judgementType);
+            UpdateHealthLevel(judgementType);
             
             //Debug.Log(judgementType);
 
             if (judgementType != JudgementType.Miss)
             {
                 _presenter.SpawnParticle(laneId, judgementType);
+                
             }
             
+
+            if (!IsAlive)
+            {
+                _gameFailEvent.OnNext(Unit.Default);   
+            }
+
             JudgeNotification.OnNext(new JudgementViewModel(laneId, judgementType));
         }
         
@@ -135,8 +147,32 @@ namespace App.Domain.Ingame
             {
                 throw new KeyNotFoundException();
             }
-
             return GameConst.PointForJudge[type];
+        }
+
+        private void UpdateHealthLevel(JudgementType type)
+        {
+            if (!IsAlive)
+            {
+                return;
+            }
+            switch (type)
+            {
+                case JudgementType.Perfect:
+                    _healthLevel.Value += 10;
+                    break;
+                case JudgementType.Good:
+                    _healthLevel.Value += 5;
+                    break;
+                case JudgementType.Bad:
+                    _healthLevel.Value += 1;
+                    break;
+                case JudgementType.Miss:
+                    _healthLevel.Value -= 10;
+                    break;
+            }
+
+            _healthLevel.Value = Mathf.Clamp(_healthLevel.Value, 0, 100);
         }
 
         public string GetRank()

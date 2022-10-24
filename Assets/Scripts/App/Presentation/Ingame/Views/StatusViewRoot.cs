@@ -1,6 +1,7 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace App.Presentation.Ingame.Views
 {
@@ -10,6 +11,8 @@ namespace App.Presentation.Ingame.Views
         [SerializeField] private TMP_Text comboText;
         [SerializeField] private TMP_Text scoreText;
 
+        [SerializeField] private Slider healthSlider;
+        
         public void UpdateCombo(int combo)
         {
             comboText.text = $"×{combo.ToString()}";
@@ -31,6 +34,11 @@ namespace App.Presentation.Ingame.Views
             scoreText.rectTransform
                 .DOScale(1.0f, 0.3f)
                 .SetEase(Ease.OutQuint);
+        }
+
+        public void UpdateSlider(float health)
+        {
+            healthSlider.DOValue(health, 0.3f).SetEase(Ease.InQuint);
         }
     }
 }
