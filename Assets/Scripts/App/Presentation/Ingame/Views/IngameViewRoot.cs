@@ -20,8 +20,6 @@ namespace App.Presentation.Ingame.Views
 
         [SerializeField] private Generator noteGenerator;
 
-        [SerializeField] private ToriiGenerator toriiGenerator;
-
         [SerializeField] private PlayableDirector playableDirector;
 
         [SerializeField] private ParticleSystem mapleEffectPrefab;

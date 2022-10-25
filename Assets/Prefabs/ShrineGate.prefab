@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 2993730712339835136}
   - component: {fileID: 8159264899005079384}
   m_Layer: 0
-  m_Name: torii
+  m_Name: ShrineGate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -136,5 +136,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa83e2ef2d04d9f9d397fff3095bd01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  lifetime: 5
+  speed: 40
+  lifetime: 3

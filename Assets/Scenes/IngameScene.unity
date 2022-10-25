@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
-  m_FogMode: 2
-  m_FogDensity: 0.025
+  m_FogColor: {r: 0.5660378, g: 0.42452833, b: 0.4752581, a: 1}
+  m_FogMode: 3
+  m_FogDensity: 0.03
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -156,7 +156,6 @@ MonoBehaviour:
   statusViewRoot: {fileID: 668355102}
   judgementPrefab: {fileID: 6825874962833183778, guid: f43f3fb4a13fbac4c9ee4bfe6ab7b6fd, type: 3}
   noteGenerator: {fileID: 1147410753}
-  toriiGenerator: {fileID: 1970520908}
   playableDirector: {fileID: 1445846908}
   mapleEffectPrefab: {fileID: 617983637099104657, guid: 81d848fb4af9ed54b9fb87df464e2c15, type: 3}
   fadeInoutView: {fileID: 2145731119}
@@ -5230,7 +5229,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &644319702
 GameObject:
@@ -6231,10 +6230,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1147410754}
   - component: {fileID: 1147410753}
-  - component: {fileID: 1147410755}
   - component: {fileID: 1147410756}
   - component: {fileID: 1147410758}
   - component: {fileID: 1147410757}
+  - component: {fileID: 1147410759}
   m_Layer: 0
   m_Name: ObjectGenerator
   m_TagString: Untagged
@@ -6255,6 +6254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 2868984282514854962, guid: f1c4e90f100801246ac9bc38e8a7d473, type: 3}
+  toriiPrefab: {fileID: 8159264899005079384, guid: 75ba658bfd2f4c340805112c88d17bfa, type: 3}
   flyingText: {fileID: 6580153564274336425, guid: 2c5e49a31d2996240bde96e9b4856a41, type: 3}
   perfectMaterial: {fileID: 2100000, guid: d11108a494604f048b7341a067bbd492, type: 2}
   goodMaterial: {fileID: 2100000, guid: f933a9bbd3017c7478739201df5c511f, type: 2}
@@ -6275,66 +6275,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1147410755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1147410752}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 11400000, guid: b9f3964d9472ea54ca26c391fcb044e7, type: 2}
-    - {fileID: 11400000, guid: 5f7e64bbea4286848ae71e7c565b39b5, type: 2}
-    - {fileID: 11400000, guid: f98d79d6163483745b7d5abb1a05e7c2, type: 2}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1147410753}
-          m_TargetAssemblyTypeName: NoteGenerator, Assembly-CSharp
-          m_MethodName: SpawnNote
-          m_Mode: 3
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: -1
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1147410753}
-          m_TargetAssemblyTypeName: NoteGenerator, Assembly-CSharp
-          m_MethodName: SpawnNote
-          m_Mode: 3
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1147410753}
-          m_TargetAssemblyTypeName: NoteGenerator, Assembly-CSharp
-          m_MethodName: SpawnNote
-          m_Mode: 3
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 1
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &1147410756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6434,6 +6374,39 @@ MonoBehaviour:
   noteOffEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1147410759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147410752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 390e5cebc37d6d7258bdb58f0380f9d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noteFilter:
+    note: 10
+    octave: 0
+  noteOnEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1147410753}
+        m_TargetAssemblyTypeName: App.Common.Generator, Assembly-CSharp
+        m_MethodName: SpawnGate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  noteOffEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1289957833
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6444,7 +6417,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 740962587952915488, guid: 8d11b19bcf93647cd868bdf5a7f858a0, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 740962587952915488, guid: 8d11b19bcf93647cd868bdf5a7f858a0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11496,7 +11469,7 @@ PlayableDirector:
     value: {fileID: 1147410752}
   m_ExposedReferences:
     m_References:
-    - 154473a571647bb40b371933d7eaec3a: {fileID: 1147410755}
+    - 154473a571647bb40b371933d7eaec3a: {fileID: 0}
 --- !u!4 &1445846909
 Transform:
   m_ObjectHideFlags: 0
@@ -11810,84 +11783,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1970520904
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1970520906}
-  - component: {fileID: 1970520908}
-  - component: {fileID: 1970520907}
-  m_Layer: 0
-  m_Name: ToriiGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1970520906
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1970520904}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.615355, y: 5.580415, z: -1.3986664}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1970520907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1970520904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 11400000, guid: b18bb2238698e19428d6a5560e179297, type: 2}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1970520908}
-          m_TargetAssemblyTypeName: App.Common.ToriiGenerator, Assembly-CSharp
-          m_MethodName: SpawnTroii
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
---- !u!114 &1970520908
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1970520904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec38ae9db96449e1a14444fb6842acc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toriiPrefab: {fileID: 8159264899005079384, guid: 75ba658bfd2f4c340805112c88d17bfa, type: 3}
 --- !u!1 &2094658456
 GameObject:
   m_ObjectHideFlags: 0
@@ -12118,6 +12015,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2927909119812444093, guid: f230da04a01fde345adddbdcb5b92f21, type: 3}
+      propertyPath: fadeOut
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2927909119812444093, guid: f230da04a01fde345adddbdcb5b92f21, type: 3}
+      propertyPath: stayDuration
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2927909119812444093, guid: f230da04a01fde345adddbdcb5b92f21, type: 3}
       propertyPath: waitDuration
       value: 0
       objectReference: {fileID: 0}
@@ -12135,7 +12040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6615995812028512912, guid: f230da04a01fde345adddbdcb5b92f21, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

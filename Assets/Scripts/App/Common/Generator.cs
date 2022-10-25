@@ -11,6 +11,8 @@ namespace App.Common
     {
         [SerializeField] private NoteView prefab;
 
+        [SerializeField] private ToriiView toriiPrefab;
+
         [SerializeField] private FlyingTextView flyingText;
 
         [SerializeField] private Material perfectMaterial;
@@ -46,6 +48,12 @@ namespace App.Common
             FlyingTextView view = Instantiate(flyingText, position, Quaternion.identity);
             view.SetText(text);
             view.SetMaterial(material);
+        }
+
+        public void SpawnGate()
+        {
+            var z = toriiPrefab.Speed * GameConst.Lifetime;
+            Instantiate(toriiPrefab, new Vector3(0, 0, z), Quaternion.identity);
         }
     }
 }
