@@ -95,16 +95,25 @@ namespace App.Domain.Ingame
             if (judgementType != JudgementType.Miss)
             {
                 _presenter.SpawnParticle(laneId, judgementType);
-                
             }
             
-
             if (!IsAlive)
             {
                 _gameFailEvent.OnNext(Unit.Default);   
             }
 
             JudgeNotification.OnNext(new JudgementViewModel(laneId, judgementType));
+        }
+
+        public void ProcessPassedNote(NotePresenter presenter)
+        {
+            AddJudgement(JudgementType.Miss);
+            _presenter.SpawnParticle(presenter.LaneId, JudgementType.Miss);
+            if (!IsAlive)
+            {
+                _gameFailEvent.OnNext(Unit.Default);   
+            }
+            JudgeNotification.OnNext(new JudgementViewModel(presenter.LaneId, JudgementType.Miss));
         }
         
         private void AddJudgement(JudgementType type)

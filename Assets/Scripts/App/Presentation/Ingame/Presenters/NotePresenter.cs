@@ -32,24 +32,24 @@ namespace App.Presentation.Ingame.Presenters
         {
             Observable.EveryUpdate()
                 .Where(_ => ZPosition < -2)
-                .Subscribe(_ => OnPassedBorder())
+                .Subscribe(_ => Dispose())
                 .AddTo(_noteView);
-        }
-
-        private void OnPassedBorder()
-        {
-            var game = GameManager.GetInstance().CurrentGame;
-            game?.Presenter.NotePresenters.RemoveNotePresenter(this);
-            Dispose();
         }
 
         public JudgementType Judge(float distance)
         {
             return _noteModelBase.Judge(distance);
         }
-        
-        public void Dispose()
+
+        private void Dispose()
         {
+            var game = GameManager.GetInstance().CurrentGame;
+            game?.Presenter.NotePresenters.RemoveNotePresenter(this);
+
+            if (_noteModelBase.Judgement == JudgementType.NotJudged)
+            {
+                game?.ProcessPassedNote(this);
+            }
             _noteView.Dispose();
         }
     }

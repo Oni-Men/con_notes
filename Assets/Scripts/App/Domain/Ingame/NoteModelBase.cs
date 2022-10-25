@@ -9,7 +9,7 @@ namespace App.Domain.Ingame
         public int LaneId { get; }
         public NoteType NoteType { get; }
 
-        public JudgementType Judgement;
+        public JudgementType Judgement { get; protected set; }
 
         public readonly float PassJudgeBarAt;
         

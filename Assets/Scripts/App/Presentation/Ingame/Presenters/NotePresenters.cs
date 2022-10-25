@@ -46,7 +46,6 @@ namespace App.Presentation.Ingame.Presenters
         public void RemoveNotePresenter(NotePresenter notePresenter)
         {
             _presenters.Remove(notePresenter);
-            notePresenter.Dispose();
         }
     }
 }

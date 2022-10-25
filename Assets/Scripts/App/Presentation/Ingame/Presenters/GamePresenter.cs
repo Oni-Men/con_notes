@@ -78,7 +78,7 @@ namespace App.Presentation.Ingame.Presenters
                     OnGameEnd();
                 });
         }
-
+        
         public void UpdateComboCount(int combo)
         {
             _statusViewRoot.UpdateCombo(combo);

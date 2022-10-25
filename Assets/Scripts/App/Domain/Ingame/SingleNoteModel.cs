@@ -11,22 +11,24 @@ namespace App.Domain.Ingame
 
         public override JudgementType Judge(float distance)
         {
-            if (distance < GameConst.JudgementThresholds[JudgementType.Perfect])
+            Judgement =  JudgementType.Miss;
+
+            if (distance < GameConst.JudgementThresholds[JudgementType.Bad])
             {
-                return JudgementType.Perfect;
+                Judgement =  JudgementType.Bad;
             }
 
             if (distance < GameConst.JudgementThresholds[JudgementType.Good])
             {
-                return JudgementType.Good;
+                Judgement =  JudgementType.Good;
             }
-
-            if (distance < GameConst.JudgementThresholds[JudgementType.Bad])
+            
+            if (distance < GameConst.JudgementThresholds[JudgementType.Perfect])
             {
-                return JudgementType.Bad;
+                Judgement = JudgementType.Perfect;
             }
 
-            return JudgementType.Miss;
+            return Judgement;
         }
     }
 }
