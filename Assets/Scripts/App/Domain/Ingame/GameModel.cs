@@ -88,7 +88,6 @@ namespace App.Domain.Ingame
             
             var judgementType = nearestNotePresenter.Judge(distance);
             AddJudgement(judgementType);
-            UpdateHealthLevel(judgementType);
             
             //Debug.Log(judgementType);
 
@@ -118,6 +117,7 @@ namespace App.Domain.Ingame
         
         private void AddJudgement(JudgementType type)
         {
+            UpdateHealthLevel(type);
             //判定リストに判定を追加する
             if (!_judgeList.ContainsKey(type))
             {
@@ -165,23 +165,26 @@ namespace App.Domain.Ingame
             {
                 return;
             }
+
+            var health = _healthLevel.Value;
+
             switch (type)
             {
                 case JudgementType.Perfect:
-                    _healthLevel.Value += 10;
+                    health += 10;
                     break;
                 case JudgementType.Good:
-                    _healthLevel.Value += 5;
+                    health += 5;
                     break;
                 case JudgementType.Bad:
-                    _healthLevel.Value += 1;
+                    health += 1;
                     break;
                 case JudgementType.Miss:
-                    _healthLevel.Value -= 10;
+                    health -= 10;
                     break;
             }
 
-            _healthLevel.Value = Mathf.Clamp(_healthLevel.Value, 0, 100);
+            _healthLevel.Value = Mathf.Clamp(health, 0, 100);
         }
 
         public string GetRank()

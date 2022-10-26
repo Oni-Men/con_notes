@@ -38,7 +38,7 @@ namespace App.Presentation.Ingame.Views
 
         public void UpdateSlider(float health)
         {
-            healthSlider.DOValue(health, 0.3f).SetEase(Ease.InQuint);
+            healthSlider.DOValue(health, 0.1f).SetEase(Ease.InOutCirc);
         }
     }
 }
