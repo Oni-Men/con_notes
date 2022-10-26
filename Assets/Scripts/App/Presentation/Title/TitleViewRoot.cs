@@ -15,6 +15,8 @@ namespace App.Presentation.Title
 
         [SerializeField] private GameObject clickEffect;
 
+        [SerializeField] private FadeInOutView fader;
+
         void Awake()
         {
             startButton.OnClickAsObservable().Subscribe(_ => ShowIngameScene()).AddTo(this);
@@ -23,7 +25,10 @@ namespace App.Presentation.Title
 
         private void ShowIngameScene()
         {
-            UniTask.Delay(TimeSpan.FromSeconds(2)).ToObservable().Subscribe(_ =>
+            
+            fader.PlayFadeOut();
+            
+            UniTask.Delay(TimeSpan.FromSeconds(1)).ToObservable().Subscribe(_ =>
             {
                 SceneManager.LoadScene("IngameScene");
             });

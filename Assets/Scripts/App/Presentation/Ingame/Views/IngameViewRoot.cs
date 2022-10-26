@@ -35,6 +35,8 @@ namespace App.Presentation.Ingame.Views
         {
             _presenter = new GamePresenter(this, statusViewRoot, inputController);
             _presenter.Initialize();
+
+            Time.timeScale = 1.0f;
         }
 
         void Start()
