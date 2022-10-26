@@ -30,7 +30,7 @@ namespace App.Common
                 _laneState.OnNext(new LaneStateData(-1, true));
             }
 
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.DownArrow))
             {
                 _laneState.OnNext(new LaneStateData(0, true));
             }
@@ -45,7 +45,7 @@ namespace App.Common
                 _laneState.OnNext(new LaneStateData(-1, false));
             }
 
-            if (Input.GetKeyUp(KeyCode.UpArrow))
+            if (Input.GetKeyUp(KeyCode.DownArrow))
             {
                 _laneState.OnNext(new LaneStateData(0, false));
             }
