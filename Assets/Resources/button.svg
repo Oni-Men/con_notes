@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg863"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="button.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview865"
+     pagecolor="#ffffff"
+     bordercolor="#cccccc"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:object-nodes="true"
+     inkscape:zoom="0.90583672"
+     inkscape:cx="154.55324"
+     inkscape:cy="523.82509"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:snap-smooth-nodes="true" />
+  <defs
+     id="defs860">
+    <inkscape:path-effect
+       effect="bend_path"
+       id="path-effect28030"
+       is_visible="true"
+       lpeversion="1"
+       bendpath="M 28.101562,452.75488 H 771.24414"
+       prop_scale="1"
+       scale_y_rel="false"
+       vertical="false"
+       hide_knot="false" />
+    <inkscape:path-effect
+       effect="perspective-envelope"
+       up_left_point="28.4,359.08203"
+       up_right_point="771.24413,359.08203"
+       down_left_point="28.101562,546.42772"
+       down_right_point="771.24413,546.42772"
+       id="path-effect28006"
+       is_visible="true"
+       lpeversion="1"
+       deform_type="envelope_deformation"
+       horizontal_mirror="false"
+       vertical_mirror="false"
+       overflow_perspective="false" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4394">
+      <stop
+         style="stop-color:#c8ab37;stop-opacity:1;"
+         offset="0"
+         id="stop4390" />
+      <stop
+         style="stop-color:#c8ab37;stop-opacity:0.74901961;"
+         offset="0.47647661"
+         id="stop5072" />
+      <stop
+         style="stop-color:#ab9034;stop-opacity:1"
+         offset="1"
+         id="stop4392" />
+    </linearGradient>
+    <inkscape:path-effect
+       effect="simplify"
+       id="path-effect2877"
+       is_visible="true"
+       lpeversion="1"
+       steps="1"
+       threshold="0.0093627"
+       smooth_angles="360"
+       helper_size="0"
+       simplify_individual_paths="false"
+       simplify_just_coalesce="false" />
+    <inkscape:path-effect
+       effect="simplify"
+       id="path-effect2873"
+       is_visible="true"
+       lpeversion="1"
+       steps="1"
+       threshold="0.0093627"
+       smooth_angles="360"
+       helper_size="0"
+       simplify_individual_paths="false"
+       simplify_just_coalesce="false" />
+    <inkscape:path-effect
+       effect="simplify"
+       id="path-effect2869"
+       is_visible="true"
+       lpeversion="1"
+       steps="1"
+       threshold="0.0093627"
+       smooth_angles="360"
+       helper_size="0"
+       simplify_individual_paths="false"
+       simplify_just_coalesce="false" />
+    <inkscape:path-effect
+       effect="simplify"
+       id="path-effect2799"
+       is_visible="true"
+       lpeversion="1"
+       steps="1"
+       threshold="0.0093627"
+       smooth_angles="360"
+       helper_size="0"
+       simplify_individual_paths="false"
+       simplify_just_coalesce="false" />
+    <inkscape:path-effect
+       effect="simplify"
+       id="path-effect2795"
+       is_visible="true"
+       lpeversion="1"
+       steps="1"
+       threshold="0.0093627"
+       smooth_angles="360"
+       helper_size="0"
+       simplify_individual_paths="false"
+       simplify_just_coalesce="false" />
+    <inkscape:path-effect
+       effect="simplify"
+       id="path-effect2676"
+       is_visible="true"
+       lpeversion="1"
+       steps="1"
+       threshold="0.0093627"
+       smooth_angles="360"
+       helper_size="0"
+       simplify_individual_paths="false"
+       simplify_just_coalesce="false" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect2376"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="simplify"
+       id="path-effect2374"
+       is_visible="true"
+       lpeversion="1"
+       steps="1"
+       threshold="0.0093627"
+       smooth_angles="360"
+       helper_size="0"
+       simplify_individual_paths="false"
+       simplify_just_coalesce="false" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect2370"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="simplify"
+       id="path-effect2368"
+       is_visible="true"
+       lpeversion="1"
+       steps="1"
+       threshold="0.0093627"
+       smooth_angles="360"
+       helper_size="0"
+       simplify_individual_paths="false"
+       simplify_just_coalesce="false" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4394"
+       id="linearGradient4396"
+       x1="7.4353266"
+       y1="119.79138"
+       x2="204.05843"
+       y2="119.79138"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(3.7795276)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4394"
+       id="linearGradient28798"
+       x1="2.1788805"
+       y1="119.79138"
+       x2="209.31487"
+       y2="119.79138"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect946"
+       style="opacity:1;fill:url(#linearGradient4396);fill-opacity:1;stroke-width:0.497;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:1;paint-order:fill markers stroke"
+       d="M 92.783203 359.08203 C 100.01804 364.45287 107.67092 369.00044 115.69141 372.49805 C 122.36337 368.88206 128.34624 364.33937 133.52344 359.08203 L 92.783203 359.08203 z M 138.89844 359.08203 C 133.58423 365.02167 127.40809 370.2507 120.39453 374.43164 C 126.32772 376.71671 132.40599 378.513 138.57031 379.79883 C 142.33299 373.8739 145.57345 367.6244 148.22852 361.11719 C 147.27414 360.49268 146.37821 359.75062 145.44531 359.08203 L 138.89844 359.08203 z M 153.27539 359.08203 C 153.22558 359.21579 153.18895 359.35471 153.13867 359.48828 C 164.79799 366.43373 177.91139 369.98296 191.05859 370.13867 C 205.03521 370.30422 219.03056 366.58852 231.37305 359.08203 L 153.27539 359.08203 z M 239.15039 359.08203 C 210.83009 382.11539 174.55994 390.52552 140.44727 384.21875 C 124.8481 407.61678 101.10394 425.74032 71.890625 433.83398 C 60.786056 436.91052 49.61267 438.34015 38.630859 438.26758 C 38.268736 438.26519 37.912478 438.22244 37.550781 438.2168 L 28.101562 452.75391 L 88.990234 546.42773 L 399.67383 546.42773 L 560.125 546.42773 C 588.45247 523.36389 624.76788 514.98061 658.90039 521.29102 C 674.49956 497.89302 698.2437 479.76945 727.45703 471.67578 C 738.56159 468.59921 749.73496 467.16962 760.7168 467.24219 C 761.0817 467.24459 761.44412 467.26577 761.80859 467.27148 L 771.24414 452.75391 L 710.35742 359.08203 L 399.67383 359.08203 L 239.15039 359.08203 z M 88.048828 360.5293 L 74.371094 381.57227 C 76.487799 381.71261 78.619464 381.76837 80.761719 381.72852 C 87.028576 381.61192 93.383316 380.71237 99.705078 378.96094 C 103.66455 377.86394 107.45509 376.46233 111.07617 374.80859 C 102.99667 371.02199 95.300495 366.19458 88.048828 360.5293 z M 151.65234 363.23047 C 149.15701 369.24925 146.18634 375.05757 142.76953 380.5957 C 149.91542 381.81713 157.15167 382.38002 164.38086 382.27344 C 180.4209 382.03741 196.42179 378.53165 211.30273 371.75977 C 191.34097 376.70668 169.84471 373.85858 151.65234 363.23047 z M 115.88086 376.92773 C 111.14467 379.34893 106.09626 381.33333 100.77148 382.80859 C 91.109368 385.48552 81.382753 386.17682 71.957031 385.28711 L 40.142578 434.23047 C 50.283396 434.16456 60.579627 432.81823 70.822266 429.98047 C 98.524033 422.30561 121.12354 405.32457 136.21289 383.36328 C 129.29781 381.82906 122.493 379.68205 115.88086 376.92773 z M 759.2207 471.25195 C 749.07565 471.31672 738.77244 472.69035 728.52539 475.5293 C 700.82361 483.20419 678.22411 500.1852 663.13477 522.14648 C 670.04983 523.68067 676.85463 525.8277 683.4668 528.58203 C 688.20296 526.16087 693.25142 524.1764 698.57617 522.70117 C 708.24881 520.02133 717.9983 519.25998 727.43359 520.1543 L 759.2207 471.25195 z M 634.9668 523.23633 C 618.92678 523.47236 602.92587 526.97814 588.04492 533.75 C 608.00669 528.80313 629.50293 531.65115 647.69531 542.2793 C 650.19063 536.26047 653.16133 530.4522 656.57812 524.91406 C 649.43226 523.69263 642.19601 523.13012 634.9668 523.23633 z M 718.58594 523.78125 C 712.31907 523.89781 705.96433 524.79736 699.64258 526.54883 C 695.68311 527.64584 691.89257 529.04748 688.27148 530.70117 C 696.35329 534.48887 704.09423 539.23493 711.34766 544.90234 L 724.97656 523.9375 C 722.85991 523.79716 720.72814 523.7414 718.58594 523.78125 z M 660.77734 525.71094 C 657.01467 531.63584 653.77422 537.88537 651.11914 544.39258 C 652.11328 545.0431 653.08975 545.72935 654.06055 546.42773 L 660.35938 546.42773 C 665.68173 540.47057 671.92308 535.26889 678.95312 531.07812 C 673.01996 528.79303 666.94168 526.99677 660.77734 525.71094 z M 683.65625 533.01172 C 676.98386 536.62796 670.99772 541.16998 665.82031 546.42773 L 706.76758 546.42773 C 699.49001 541.00741 691.73137 536.53318 683.65625 533.01172 z M 608.28906 535.37109 L 608.28906 535.375 C 594.29819 535.20928 580.27743 538.90576 567.92578 546.42773 L 646.06445 546.42773 C 646.11459 546.2931 646.15838 546.15592 646.20898 546.02148 C 634.54967 539.07604 621.43626 535.52681 608.28906 535.37109 z "
+       transform="scale(0.26458333)"
+       inkscape:export-filename="F:\RevProject\RevolutionProject\Assets\Resources\button.png"
+       inkscape:export-xdpi="88.827568"
+       inkscape:export-ydpi="88.827568" />
+    <path
+       id="path3787"
+       style="opacity:1;fill:none;fill-opacity:0.997167;stroke:url(#linearGradient28798);stroke-width:2.11666667;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:1;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 21.0657,92.044282 h 84.68118 84.68117 l 17.63286,27.747098 -17.63286,27.74709 H 105.74687 21.0657 L 3.4328341,119.79138 Z"
+       sodipodi:nodetypes="ccccccccc"
+       inkscape:export-filename="F:\RevProject\RevolutionProject\Assets\Resources\button.png"
+       inkscape:export-xdpi="88.827568"
+       inkscape:export-ydpi="88.827568" />
+  </g>
+</svg>
