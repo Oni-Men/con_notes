@@ -147,7 +147,7 @@ namespace App.Domain.Ingame
 
         private int CalcBonusAmount(int value)
         {
-            var scale = _currentCombo.Value;
+            var scale = (int)Mathf.Log(_currentCombo.Value, 5);
             return value * scale;
         }
 
