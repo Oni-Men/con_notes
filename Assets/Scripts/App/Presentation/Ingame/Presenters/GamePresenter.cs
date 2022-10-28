@@ -117,6 +117,7 @@ namespace App.Presentation.Ingame.Presenters
         {
             // フェードアウト演出
             _ingameViewRoot.fadeInoutView.PlayFadeOut();
+            _game.OnGameEnd();
             
             // リザルトシーンへ遷移
             Observable.Timer(TimeSpan.FromSeconds(2)).Subscribe(_ => { SceneManager.LoadScene("ResultScene"); });

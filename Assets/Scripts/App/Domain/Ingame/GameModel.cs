@@ -147,7 +147,8 @@ namespace App.Domain.Ingame
 
         private int CalcBonusAmount(int value)
         {
-            return value * _currentCombo.Value;
+            var scale = _currentCombo.Value;
+            return value * scale;
         }
 
         private static int GetPointForJudge(JudgementType type)
@@ -198,6 +199,10 @@ namespace App.Domain.Ingame
             }
 
             return "???";
+        }
+
+        public void OnGameEnd() {
+            _maxCombo.Value = Math.Max(_maxCombo.Value, _currentCombo.Value);
         }
     }
 }
