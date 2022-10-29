@@ -16,8 +16,6 @@ namespace App.Presentation.Ingame.Views
 
         [SerializeField] private StatusViewRoot statusViewRoot;
 
-        [SerializeField] private JudgementView judgementPrefab;
-
         [SerializeField] private Generator noteGenerator;
 
         [SerializeField] private PlayableDirector playableDirector;
@@ -42,14 +40,8 @@ namespace App.Presentation.Ingame.Views
         void Start()
         {
             // 5秒後に音楽を再生する
-            Observable.Timer(TimeSpan.FromSeconds(5)).Subscribe(_ => { playableDirector.Play(); });
-
-            // デバッグ: 15秒後にゲームを終了する
-            // Observable.Timer(TimeSpan.FromSeconds(15)).Subscribe(_ =>
-            // {
-            //     _endPlayingEvent.OnNext(Unit.Default);
-            // });
-
+            var waitDuration = GameManager.ShouldPlayCutIn ? 5f : 0f;
+            Observable.Timer(TimeSpan.FromSeconds(waitDuration)).Subscribe(_ => { playableDirector.Play(); });
 
             // 音楽の再生が終わったらイベントを発行する
             playableDirector.stopped += p => { _endPlayingEvent.OnNext(Unit.Default); };
@@ -63,7 +55,7 @@ namespace App.Presentation.Ingame.Views
 
         public void SpawnFlyingText(int laneId, JudgementType type)
         {
-            if (!GameConst.JudgementText.ContainsKey(type))
+            if (!GameConst.EvalNames.ContainsKey(type))
             {
                 return;
             }
@@ -76,24 +68,28 @@ namespace App.Presentation.Ingame.Views
             // Debug.Log($"Lane: {laneId}, Type: {type}");
 
             var pos = new Vector3(laneId, 0, 0);
-            var text = GameConst.JudgementText[type];
+            var text = GameConst.EvalNames[type];
             var material = noteGenerator.JudgementAndMaterials[type];
 
             noteGenerator.SpawnFlyingText(pos, text, material);
         }
 
-        public void StopPlayingBeatmap()
+        public void PlaySlowEffect()
         {
+            const float interval = 0.1f;
+            const int times = 6;
+            
             Observable
-                .Interval(TimeSpan.FromSeconds(0.1))
-                .Take(10)
+                .Interval(TimeSpan.FromSeconds(interval), Scheduler.MainThreadIgnoreTimeScale)
+                .Take(times)
                 .Subscribe(_ => { Time.timeScale *= 0.8f; })
                 .AddTo(this);
-            Observable.Timer(TimeSpan.FromSeconds(1.0)).Subscribe(_ =>
-            {
-                Time.timeScale = 1.0f;
-                playableDirector.Stop();
-            }).AddTo(this);
+            Observable.Timer(TimeSpan.FromSeconds(interval * times), Scheduler.MainThreadIgnoreTimeScale)
+                .Subscribe(_ =>
+                {
+                    Time.timeScale = 1.0f;
+                    playableDirector.Stop();
+                }).AddTo(this);
         }
     }
 }

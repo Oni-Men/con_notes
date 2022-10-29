@@ -154,7 +154,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputController: {fileID: 2094658461}
   statusViewRoot: {fileID: 668355102}
-  judgementPrefab: {fileID: 6825874962833183778, guid: f43f3fb4a13fbac4c9ee4bfe6ab7b6fd, type: 3}
   noteGenerator: {fileID: 1147410753}
   playableDirector: {fileID: 1445846908}
   mapleEffectPrefab: {fileID: 617983637099104657, guid: 81d848fb4af9ed54b9fb87df464e2c15, type: 3}
@@ -419,9 +418,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b5a2f87ed08064438cae89628dbdb51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  videoObject: {fileID: 438362951}
+  videoObject: {fileID: 438362948}
   waitSeconds: 0
-  videoTime: 5
+  fadeTime: 0
 --- !u!1 &546429579
 GameObject:
   m_ObjectHideFlags: 0
@@ -6094,7 +6093,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6215606851707680847, guid: 695861d312c2c43fcac76dec9198ebb4, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

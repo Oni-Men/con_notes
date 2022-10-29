@@ -1,5 +1,9 @@
 using System;
+using System.Linq;
+using System.Text;
+using App.Application;
 using App.Domain;
+using App.Domain.Ingame.Enums;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -16,6 +20,8 @@ namespace App.Presentation.Result
 
         [SerializeField] private TMP_Text maxComboText;
 
+        [SerializeField] private TMP_Text evalCountsText;
+
         [SerializeField] private Button retryButton;
 
         [SerializeField] private Button titleButton;
@@ -26,32 +32,35 @@ namespace App.Presentation.Result
         void OnEnable()
         {
             var gameManager = GameManager.GetInstance();
-            var currentGame = gameManager.CurrentGame;
-            if (currentGame == null)
+            var resultViewModel = gameManager.GetResultList().LastOrDefault();
+            
+            if (resultViewModel == null)
             {
-                throw new NullReferenceException("current game is null. we cannot refer result of the last game.");
+                throw new NullReferenceException("result is null.");
             }
 
-            var score = currentGame.Score.Value;
-            var maxCombo = currentGame.MaxCombo.Value;
-            var rank = currentGame.GetRank();
+            // 成功、失敗それぞれの場合に合わせてBGMを鳴らす
+            AudioSource.PlayClipAtPoint(resultViewModel.IsSucceed ? successBgm : failBgm, Vector3.zero);
 
-            if (currentGame.IsAlive && !rank.Equals("不可"))
-            {
-               AudioSource.PlayClipAtPoint(successBgm, Vector3.zero);
-            }
-            else
-            {
-                AudioSource.PlayClipAtPoint(failBgm, Vector3.zero);
-            }
-            
-            scoreText.text = $"{score} ポイント";
-            rankText.text = rank;
-            maxComboText.text = $"{maxCombo} コンボ";
-            
+            // ボタンのハンドラを登録
             retryButton.OnClickAsObservable().Subscribe(_ => ShowRetryScene()).AddTo(this);
             titleButton.OnClickAsObservable().Subscribe(_ => ShowTitleScene()).AddTo(this);
+            
+            SetResultViewModel(resultViewModel);
         }
+
+        private void SetResultViewModel(GameResultViewModel resultViewModel)
+        {
+            scoreText.text = $"{resultViewModel.Score} ポイント";
+            rankText.text = resultViewModel.IsSucceed ? resultViewModel.RankText : "失敗...";
+            maxComboText.text = $"{resultViewModel.MaxCombo} コンボ";
+
+            evalCountsText.text
+                = $"{GameConst.EvalNames[JudgementType.Perfect]}:   {resultViewModel.EvalCounts[JudgementType.Perfect]}\n" +
+                  $"{GameConst.EvalNames[JudgementType.Good]}:  {resultViewModel.EvalCounts[JudgementType.Good]}\n" +
+                  $"{GameConst.EvalNames[JudgementType.Bad]}:   {resultViewModel.EvalCounts[JudgementType.Bad]}\n" +
+                  $"{GameConst.EvalNames[JudgementType.Miss]}:  {resultViewModel.EvalCounts[JudgementType.Miss]}";
+        } 
 
         private void ShowRetryScene()
         {

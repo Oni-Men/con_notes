@@ -20,7 +20,7 @@ namespace App.Presentation.Ingame.Views
                 return;
             }
 
-            var miss = game.JudgementList.ContainsKey(JudgementType.Miss) ? game.JudgementList[JudgementType.Miss]: 0;
+            var miss = game.EvalCounts.ContainsKey(JudgementType.Miss) ? game.EvalCounts[JudgementType.Miss]: 0;
             
             _text.text = $@"
 Score: {game.Score}

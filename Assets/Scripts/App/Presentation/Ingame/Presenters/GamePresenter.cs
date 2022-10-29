@@ -1,11 +1,10 @@
-using System;
+using App.Application;
 using App.Common;
 using App.Domain;
 using App.Domain.Ingame;
 using App.Domain.Ingame.Enums;
 using App.Presentation.Ingame.Views;
 using UniRx;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace App.Presentation.Ingame.Presenters
@@ -45,38 +44,29 @@ namespace App.Presentation.Ingame.Presenters
             _gameModel.Score.Subscribe(score => _statusViewRoot.UpdateScore(score)).AddTo(_statusViewRoot);
             _gameModel.CurrentCombo.Subscribe(combo => _statusViewRoot.UpdateCombo(combo)).AddTo(_statusViewRoot);
             _gameModel.MaxCombo.Subscribe(maxCombo => _statusViewRoot.UpdateMaxCombo(maxCombo)).AddTo(_statusViewRoot);
-            _gameModel.HealthLevel.Subscribe(health =>
-            {
-                _statusViewRoot.UpdateSlider(health);
-            });
-            _gameModel.GameFailEvent.First().Subscribe(_ =>
-            {
-                FailGame();
-                OnGameEnd();
-            });
+            _gameModel.HealthLevel.Subscribe(health => _statusViewRoot.UpdateSlider(health)).AddTo(_statusViewRoot);
             
-            _inputController.LaneStateObserver.Subscribe(laneState =>
-            {
-                if (laneState.IsPressed)
-                {
-                    _gameModel.PressLane(laneState.LaneId);
-                    _gameModel.DoJudge(laneState.LaneId);
-                }
-                else
-                {
-                    _gameModel.ReleaseLane(laneState.LaneId);
-                }
-            }).AddTo(_inputController);
+            _gameModel.GameEndEvent.First().Subscribe(OnGameEnd);
+
+            _inputController.LaneStateObserver.Subscribe(HandleInput).AddTo(_inputController);
 
             // 楽曲再生終了時に一回だけハンドラを実行する
             _ingameViewRoot.EndPlayingEvent
                 .First()
-                .Subscribe(_ =>
-                {
-                    //TODO ゲーム終了処理
-                    Debug.Log("end playing event");
-                    OnGameEnd();
-                });
+                .Subscribe(_ => { _gameModel.Finalize(); });
+        }
+
+        private void HandleInput(InputController.LaneStateData laneState)
+        {
+            if (laneState.IsPressed)
+            {
+                _gameModel.PressLane(laneState.LaneId);
+                _gameModel.DoJudge(laneState.LaneId);
+            }
+            else
+            {
+                _gameModel.ReleaseLane(laneState.LaneId);
+            }
         }
         
         public void UpdateComboCount(int combo)
@@ -108,19 +98,21 @@ namespace App.Presentation.Ingame.Presenters
             _ingameViewRoot.SpawnParticle(laneId, amount);
         }
 
-        private void FailGame()
-        {   
-            _ingameViewRoot.StopPlayingBeatmap();
-        }
-        
-        private  void OnGameEnd()
+        private void OnGameEnd(GameResultViewModel gameResultViewModel)
         {
-            // フェードアウト演出
-            _ingameViewRoot.fadeInoutView.PlayFadeOut();
-            _gameModel.OnGameEnd();
+            if (!_gameModel.IsAlive)
+            {
+                _ingameViewRoot.PlaySlowEffect();
+            }
             
-            // リザルトシーンへ遷移
-            Observable.Timer(TimeSpan.FromSeconds(2)).Subscribe(_ => { SceneManager.LoadScene("ResultScene"); });
+            GameManager.GetInstance().AddResultViewModel(gameResultViewModel);
+
+            // フェードアウト演出
+            _ingameViewRoot.fadeInoutView.PlayFadeOut().Subscribe(_ =>
+            {
+                // リザルトシーンへ遷移
+                SceneManager.LoadScene("ResultScene");
+            });
         }
     }
 }

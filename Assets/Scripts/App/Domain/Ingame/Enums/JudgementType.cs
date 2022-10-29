@@ -7,6 +7,5 @@ namespace App.Domain.Ingame.Enums
         Bad = 2,
         Good = 3,
         Perfect = 4,
-        
     }
 }

@@ -13,17 +13,17 @@ namespace App.Domain.Ingame
         {
             Judgement =  JudgementType.Miss;
 
-            if (distance < GameConst.JudgementThresholds[JudgementType.Bad])
+            if (distance < GameConst.EvalAndThresholds[JudgementType.Bad])
             {
                 Judgement =  JudgementType.Bad;
             }
 
-            if (distance < GameConst.JudgementThresholds[JudgementType.Good])
+            if (distance < GameConst.EvalAndThresholds[JudgementType.Good])
             {
                 Judgement =  JudgementType.Good;
             }
             
-            if (distance < GameConst.JudgementThresholds[JudgementType.Perfect])
+            if (distance < GameConst.EvalAndThresholds[JudgementType.Perfect])
             {
                 Judgement = JudgementType.Perfect;
             }

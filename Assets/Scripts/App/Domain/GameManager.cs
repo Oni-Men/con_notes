@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using App.Application;
 using App.Domain.Ingame;
 using App.Presentation.Ingame.Presenters;
+using UnityEngine;
 
 namespace App.Domain
 {
@@ -8,13 +11,15 @@ namespace App.Domain
         private static GameManager _instance = new GameManager();
 
         public static bool ShouldPlayCutIn = true;
-        
+
         public static GameManager GetInstance()
         {
             return _instance;
         }
 
         public GameModel CurrentGame { get; private set; }
+
+        private readonly List<GameResultViewModel> _resultList = new();
 
         private GameManager()
         {
@@ -27,7 +32,15 @@ namespace App.Domain
             CurrentGame.Initialize();
             return CurrentGame;
         }
-        
-        
+
+        public void AddResultViewModel(GameResultViewModel resultViewModel)
+        {
+            _resultList.Add(resultViewModel);
+        }
+
+        public IReadOnlyList<GameResultViewModel> GetResultList()
+        {
+            return _resultList;
+        }
     }
 }

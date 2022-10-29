@@ -1,5 +1,6 @@
 using System;
-using Cysharp.Threading.Tasks;
+using App.Domain;
+using App.Presentation.Ingame.Views;
 using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,25 +14,22 @@ namespace App.Presentation.Title
 
         [SerializeField] private Button exitButton;
 
-        [SerializeField] private GameObject clickEffect;
-
         [SerializeField] private FadeInOutView fader;
 
         void Awake()
         {
+            GameConst.LoadMasterData();
+            
             startButton.OnClickAsObservable().Subscribe(_ => ShowIngameScene()).AddTo(this);
             exitButton.OnClickAsObservable().Subscribe(_ => ExitGame()).AddTo(this);
+
+            GameManager.ShouldPlayCutIn = true;
         }
 
         private void ShowIngameScene()
         {
-            
-            fader.PlayFadeOut();
-            
-            UniTask.Delay(TimeSpan.FromSeconds(1)).ToObservable().Subscribe(_ =>
-            {
-                SceneManager.LoadScene("IngameScene");
-            });
+            fader.PlayFadeOut()
+                .Subscribe(_ => { SceneManager.LoadScene("IngameScene"); });
         }
 
         private void ExitGame()
