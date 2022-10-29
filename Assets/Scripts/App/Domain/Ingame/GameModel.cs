@@ -39,7 +39,13 @@ namespace App.Domain.Ingame
 
         public void Initialize()
         {
-            _evalCounts = new Dictionary<JudgementType, int>();
+            _evalCounts = new Dictionary<JudgementType, int>()
+            {
+                { JudgementType.Perfect , 0},
+                { JudgementType.Good , 0},
+                { JudgementType.Bad, 0},
+                { JudgementType.Miss , 0},
+            };
             _score.Value = 0;
             _currentCombo.Value = 0;
             _maxCombo.Value = 0;
@@ -52,7 +58,7 @@ namespace App.Domain.Ingame
             };
         }
 
-        public void Finalize()
+        public void FinalizeGame()
         {
             _maxCombo.Value = Math.Max(_maxCombo.Value, _currentCombo.Value);
             _gameEndEvent.OnNext(new GameResultViewModel(this));
@@ -107,7 +113,7 @@ namespace App.Domain.Ingame
             
             if (!IsAlive)
             {
-                Finalize();
+                FinalizeGame();
             }
 
             JudgeNotification.OnNext(new JudgementViewModel(laneId, judgementType));
@@ -128,11 +134,6 @@ namespace App.Domain.Ingame
             
             UpdateHealthLevel(type);
             //判定リストに判定を追加する
-            if (!_evalCounts.ContainsKey(type))
-            {
-                _evalCounts.Add(type, 0);
-            }
-
             _evalCounts[type]++;
 
             //ミスのときコンボをリセット、そうでないときコンボを加算

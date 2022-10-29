@@ -56,10 +56,10 @@ namespace App.Presentation.Result
             maxComboText.text = $"{resultViewModel.MaxCombo} コンボ";
 
             evalCountsText.text
-                = $"{GameConst.EvalNames[JudgementType.Perfect]}:   {resultViewModel.EvalCounts[JudgementType.Perfect]}\n" +
-                  $"{GameConst.EvalNames[JudgementType.Good]}:  {resultViewModel.EvalCounts[JudgementType.Good]}\n" +
-                  $"{GameConst.EvalNames[JudgementType.Bad]}:   {resultViewModel.EvalCounts[JudgementType.Bad]}\n" +
-                  $"{GameConst.EvalNames[JudgementType.Miss]}:  {resultViewModel.EvalCounts[JudgementType.Miss]}";
+                = $"{GameConst.EvalNames[JudgementType.Perfect]}:\t\t{resultViewModel.EvalCounts[JudgementType.Perfect]}\n" +
+                  $"{GameConst.EvalNames[JudgementType.Good]}:\t\t{resultViewModel.EvalCounts[JudgementType.Good]}\n" +
+                  $"{GameConst.EvalNames[JudgementType.Bad]}:\t\t{resultViewModel.EvalCounts[JudgementType.Bad]}\n" +
+                  $"{GameConst.EvalNames[JudgementType.Miss]}:\t\t{resultViewModel.EvalCounts[JudgementType.Miss]}";
         } 
 
         private void ShowRetryScene()

@@ -53,7 +53,7 @@ namespace App.Presentation.Ingame.Presenters
             // 楽曲再生終了時に一回だけハンドラを実行する
             _ingameViewRoot.EndPlayingEvent
                 .First()
-                .Subscribe(_ => { _gameModel.Finalize(); });
+                .Subscribe(_ => { _gameModel.FinalizeGame(); });
         }
 
         private void HandleInput(InputController.LaneStateData laneState)
