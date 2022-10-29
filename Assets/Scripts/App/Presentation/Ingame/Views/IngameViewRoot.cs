@@ -74,22 +74,24 @@ namespace App.Presentation.Ingame.Views
             noteGenerator.SpawnFlyingText(pos, text, material);
         }
 
-        public void PlaySlowEffect()
+        public IObservable<long> PlaySlowEffect()
         {
             const float interval = 0.1f;
-            const int times = 6;
-            
+            const int times = 15;
+
             Observable
                 .Interval(TimeSpan.FromSeconds(interval), Scheduler.MainThreadIgnoreTimeScale)
                 .Take(times)
-                .Subscribe(_ => { Time.timeScale *= 0.8f; })
+                .Subscribe(_ => { Time.timeScale *= 0.9f; })
                 .AddTo(this);
-            Observable.Timer(TimeSpan.FromSeconds(interval * times), Scheduler.MainThreadIgnoreTimeScale)
-                .Subscribe(_ =>
-                {
-                    Time.timeScale = 1.0f;
-                    playableDirector.Stop();
-                }).AddTo(this);
+            var timer = Observable.Timer(TimeSpan.FromSeconds(interval * times), Scheduler.MainThreadIgnoreTimeScale);
+            timer.Subscribe(_ =>
+            {
+                Time.timeScale = 1.0f;
+                playableDirector.Stop();
+            }).AddTo(this);
+
+            return timer;
         }
     }
 }

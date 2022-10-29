@@ -1,3 +1,4 @@
+using System;
 using App.Application;
 using App.Common;
 using App.Domain;
@@ -45,7 +46,7 @@ namespace App.Presentation.Ingame.Presenters
             _gameModel.CurrentCombo.Subscribe(combo => _statusViewRoot.UpdateCombo(combo)).AddTo(_statusViewRoot);
             _gameModel.MaxCombo.Subscribe(maxCombo => _statusViewRoot.UpdateMaxCombo(maxCombo)).AddTo(_statusViewRoot);
             _gameModel.HealthLevel.Subscribe(health => _statusViewRoot.UpdateSlider(health)).AddTo(_statusViewRoot);
-            
+
             _gameModel.GameEndEvent.First().Subscribe(OnGameEnd);
 
             _inputController.LaneStateObserver.Subscribe(HandleInput).AddTo(_inputController);
@@ -68,7 +69,7 @@ namespace App.Presentation.Ingame.Presenters
                 _gameModel.ReleaseLane(laneState.LaneId);
             }
         }
-        
+
         public void UpdateComboCount(int combo)
         {
             _statusViewRoot.UpdateCombo(combo);
@@ -100,14 +101,14 @@ namespace App.Presentation.Ingame.Presenters
 
         private void OnGameEnd(GameResultViewModel gameResultViewModel)
         {
+            GameManager.GetInstance().AddResultViewModel(gameResultViewModel);
+
+            IObservable<long> timer;
             if (!_gameModel.IsAlive)
             {
                 _ingameViewRoot.PlaySlowEffect();
             }
-            
-            GameManager.GetInstance().AddResultViewModel(gameResultViewModel);
 
-            // フェードアウト演出
             _ingameViewRoot.fadeInoutView.PlayFadeOut().Subscribe(_ =>
             {
                 // リザルトシーンへ遷移
