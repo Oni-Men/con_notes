@@ -21,7 +21,7 @@ namespace App.Domain
 
         public const float Lifetime = 3.0f;
 
-        private static Dictionary<JudgementType, int> _evalAndPoints = new Dictionary<JudgementType, int>()
+        private static Dictionary<JudgementType, int> _evalAndPoints = new()
         {
             { JudgementType.Miss, 0 },
             { JudgementType.Bad, 1 },
@@ -29,7 +29,7 @@ namespace App.Domain
             { JudgementType.Perfect, 5 },
         };
 
-        private static Dictionary<JudgementType, float> _evalAndThresholds = new Dictionary<JudgementType, float>()
+        private static Dictionary<JudgementType, float> _evalAndThresholds = new()
         {
             { JudgementType.Perfect, 1f },
             { JudgementType.Good, 1.5f },
@@ -37,7 +37,7 @@ namespace App.Domain
         };
 
         private static Dictionary<JudgementType, string> _evalNames =
-            new Dictionary<JudgementType, string>()
+            new()
             {
                 { JudgementType.Perfect, "秀" },
                 { JudgementType.Good, "優" },

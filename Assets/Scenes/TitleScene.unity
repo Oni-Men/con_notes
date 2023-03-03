@@ -285,6 +285,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 719914761367928589, guid: 695861d312c2c43fcac76dec9198ebb4, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 719914761367928589, guid: 695861d312c2c43fcac76dec9198ebb4, type: 3}
       propertyPath: stayDuration
       value: -1
       objectReference: {fileID: 0}
@@ -1190,7 +1194,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startButton: {fileID: 1177786621}
   exitButton: {fileID: 877874061}
-  clickEffect: {fileID: 5600773877604975682, guid: 81d848fb4af9ed54b9fb87df464e2c15, type: 3}
   fader: {fileID: 612097161}
 --- !u!1 &2145693319
 GameObject:

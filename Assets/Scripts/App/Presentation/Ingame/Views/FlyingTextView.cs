@@ -12,7 +12,7 @@ namespace App.Presentation.Ingame.Views
 
         private void Start()
         {
-            this.transform
+            transform
                 .DOMoveZ(-0.5f, 1f)
                 .SetEase(Ease.OutQuint)
                 .OnComplete(() =>

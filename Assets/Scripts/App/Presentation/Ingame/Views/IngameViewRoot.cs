@@ -2,6 +2,7 @@ using System;
 using App.Common;
 using App.Domain;
 using App.Domain.Ingame.Enums;
+using App.Presentation.Common;
 using App.Presentation.Ingame.Presenters;
 using UniRx;
 using UnityEngine;

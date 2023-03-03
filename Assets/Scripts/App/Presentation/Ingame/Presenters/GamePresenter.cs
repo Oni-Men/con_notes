@@ -1,10 +1,12 @@
 using System;
+using System.Threading;
 using App.Application;
 using App.Common;
 using App.Domain;
 using App.Domain.Ingame;
 using App.Domain.Ingame.Enums;
 using App.Presentation.Ingame.Views;
+using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine.SceneManagement;
 
@@ -47,7 +49,10 @@ namespace App.Presentation.Ingame.Presenters
             _gameModel.MaxCombo.Subscribe(maxCombo => _statusViewRoot.UpdateMaxCombo(maxCombo)).AddTo(_statusViewRoot);
             _gameModel.HealthLevel.Subscribe(health => _statusViewRoot.UpdateSlider(health)).AddTo(_statusViewRoot);
 
-            _gameModel.GameEndEvent.First().Subscribe(OnGameEnd);
+            _gameModel.GameEndEvent.First().Subscribe(result =>
+            {
+                OnGameEnd(result).Forget();
+            });
 
             _inputController.LaneStateObserver.Subscribe(HandleInput).AddTo(_inputController);
 
@@ -82,38 +87,26 @@ namespace App.Presentation.Ingame.Presenters
 
         public void SpawnParticle(int laneId, JudgementType type)
         {
-            var amount = 0f;
-            switch (type)
+            var amount = type switch
             {
-                case JudgementType.Perfect:
-                    amount = 1f;
-                    break;
-                case JudgementType.Good:
-                    amount = 0.5f;
-                    break;
-                case JudgementType.Bad:
-                    amount = 0.25f;
-                    break;
-            }
+                JudgementType.Perfect => 1f,
+                JudgementType.Good => 0.5f,
+                JudgementType.Bad => 0.25f,
+                _ => 0f
+            };
 
             _ingameViewRoot.SpawnParticle(laneId, amount);
         }
 
-        private void OnGameEnd(GameResultViewModel gameResultViewModel)
+        private async UniTask OnGameEnd(GameResultViewModel gameResultViewModel)
         {
             GameManager.GetInstance().AddResultViewModel(gameResultViewModel);
-
-            IObservable<long> timer;
             if (!_gameModel.IsAlive)
             {
                 _ingameViewRoot.PlaySlowEffect();
             }
-
-            _ingameViewRoot.fadeInoutView.PlayFadeOut().Subscribe(_ =>
-            {
-                // リザルトシーンへ遷移
-                SceneManager.LoadScene("ResultScene");
-            });
+            await _ingameViewRoot.fadeInoutView.PlayFadeOut(CancellationToken.None);
+            SceneManager.LoadScene("ResultScene");
         }
     }
 }
