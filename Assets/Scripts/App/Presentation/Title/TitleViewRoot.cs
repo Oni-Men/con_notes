@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using App.Domain;
 using App.Presentation.Common;
@@ -35,7 +36,19 @@ namespace App.Presentation.Title
         private async UniTask ShowIngameScene()
         {
             await fader.PlayFadeOut(CancellationToken.None);
-            SceneManager.LoadScene("IngameScene");
+            SceneManager.LoadScene("IngameScene"); 
+            var rootGameObjects = SceneManager.GetActiveScene().GetRootGameObjects();
+            var ingameViewRoot = rootGameObjects
+                .Select(go => go.GetComponent<IngameViewRoot>())
+                .FirstOrDefault(view => view is not null);
+
+            if (ingameViewRoot is null)
+            {
+                return;
+            }
+
+            var param = new IngameViewRoot.IngameViewParam{};
+            ingameViewRoot.Initialize(param);
         }
 
         private async UniTask ExitGame()

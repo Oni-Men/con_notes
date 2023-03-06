@@ -13,6 +13,11 @@ namespace App.Presentation.Ingame.Views
 {
     public class IngameViewRoot : MonoBehaviour
     {
+        public struct IngameViewParam
+        {
+            
+        }
+
         [SerializeField] private InputController inputController;
 
         [SerializeField] private StatusViewRoot statusViewRoot;
@@ -46,6 +51,11 @@ namespace App.Presentation.Ingame.Views
 
             // 音楽の再生が終わったらイベントを発行する
             playableDirector.stopped += p => { _endPlayingEvent.OnNext(Unit.Default); };
+        }
+
+        public void Initialize(IngameViewParam param)
+        {
+            
         }
 
         public void SpawnParticle(int laneId, float amount)
