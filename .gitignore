@@ -76,3 +76,5 @@ crashlytics-build.properties
 
 # UMotion Data
 [Uu]MotionData/*
+
+Assets/Config/.github_token
