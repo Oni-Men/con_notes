@@ -1,8 +1,10 @@
+using System;
 using System.Threading;
 using App.Domain.Scenario;
 using App.Presentation.Common;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,11 +28,14 @@ namespace App.Presentation.Scenario
         private VerticalTextView verticalTitleView;
 
         private ScenarioPresenter _scenarioPresenter;
+        
+        private readonly Subject<Unit> _scenarioPlayCancelEvent = new();
+        public IObservable<Unit> ScenarioPlayCancelEvent => _scenarioPlayCancelEvent;
 
-        public void Initialize(ScenarioRoot scenarioRoot)
+        public void Initialize(ScenarioData scenarioData)
         {
             _scenarioPresenter = new ScenarioPresenter(this);
-            _scenarioPresenter.Init(scenarioRoot);
+            _scenarioPresenter.Init(scenarioData);
             _scenarioPresenter.StartScenario().Forget();
         }
 
@@ -51,7 +56,7 @@ namespace App.Presentation.Scenario
         {
             canvasGroup.alpha = 1.0f;
             verticalTextView.ClearText();
-            await verticalTextView.SetTextAsync(text, cancellationToken);
+            await verticalTextView.SetTextAsync(text, cancellationToken, 1f);
         }
 
         public async UniTask ShowTitle(string title, CancellationToken cancellationToken)
@@ -80,6 +85,14 @@ namespace App.Presentation.Scenario
         {
             var clickEvent = nextButton.onClick.GetAsyncEventHandler(token);
             await clickEvent.OnInvokeAsync();
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                _scenarioPlayCancelEvent.OnNext(Unit.Default);
+            }
         }
     }
 }

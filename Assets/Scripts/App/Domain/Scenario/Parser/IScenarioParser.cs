@@ -4,6 +4,6 @@ namespace Domain.Scenario.Parser
 {
     public interface IScenarioParser
     {
-        public ScenarioRoot TryParseScenario(string data);
+        public ScenarioData TryParseScenario(string data);
     }
 }

@@ -17,3 +17,5 @@ MonoBehaviour:
     value: 001.yml
   - key: "\u7B2C\u4E00\u8A71"
     value: 002.yml
+  - key: "\u7B2C\u4E8C\u8A71"
+    value: 003.yml

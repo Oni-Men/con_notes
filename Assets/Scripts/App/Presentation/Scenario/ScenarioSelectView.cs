@@ -33,16 +33,16 @@ namespace App.Presentation.Scenario
 
         private readonly Subject<string> _scenarioSelectEvent = new ();
         public IObservable<string> ScenarioSelectEvent => _scenarioSelectEvent;
-        
-        
-        private async void Start()
+
+        private void Start()
         {
             var database = DatabaseFactory.ScenarioDatabase;
             _titles = database.All().Keys.ToList();
-            await InitList(gameObject.GetCancellationTokenOnDestroy());
+            InitList();
+            UpdateList(gameObject.GetCancellationTokenOnDestroy()).Forget();
         }
 
-        private VerticalTextView CreateTextView()
+        private void CreateTextView()
         {
             var verticalTextView = Instantiate(original, rectTransform);
             verticalTextView.transform.localScale = Vector3.one;
@@ -51,49 +51,47 @@ namespace App.Presentation.Scenario
             verticalTextView.textAlign = VerticalTextView.TextAlign.Center;
             verticalTextView.ClearText();
             textViews.Add(verticalTextView);
-            return verticalTextView;
         }
 
-        private async UniTask InitList(CancellationToken ct)
+        private void InitList()
         {
-            var page = selectIndex / maxTitlesPerPage;
-            if (page == _currentPage)
-            {
-                return;
-            }
-
-            _currentPage = page;
-            var indexFirst = _currentPage * maxTitlesPerPage;
             for (var i = 0; i < maxTitlesPerPage; i++)
             {
                 CreateTextView();
             }
+        }
 
+        private async UniTask UpdateList(CancellationToken ct)
+        {
+            _currentPage = selectIndex / maxTitlesPerPage;
+            var indexFirst = _currentPage * maxTitlesPerPage;
             await UniTask.DelayFrame(30, cancellationToken:ct); // Wait for a frame to calculate rect size by layout
 
             for (var i = 0; i < maxTitlesPerPage; i++)
             {
                 var index = indexFirst + i;
+                var text = "";
                 if (index < _titles.Count)
                 {
-                    await textViews[index].SetTextAsync(_titles[index], ct);
+                    text = $"{(index == selectIndex ? "*" : " ")} {_titles[index]}";
                 }
-            } 
-            
+                await textViews[index].SetTextAsync(text, ct);
+            }
         }
+        
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 selectIndex++;
-                InitList(gameObject.GetCancellationTokenOnDestroy()).Forget();
+                UpdateList(gameObject.GetCancellationTokenOnDestroy()).Forget();
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 selectIndex--;
-                InitList(gameObject.GetCancellationTokenOnDestroy()).Forget();
+                UpdateList(gameObject.GetCancellationTokenOnDestroy()).Forget();
             }
 
             selectIndex = Math.Clamp(selectIndex, 0, _titles.Count - 1);

@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using App.Application;
 using App.Common;
@@ -14,7 +13,7 @@ namespace App.Presentation.Ingame.Presenters
 {
     public class GamePresenter
     {
-        private readonly IngameViewRoot _ingameViewRoot;
+        private readonly InGameViewRoot inGameViewRoot;
         private readonly StatusViewRoot _statusViewRoot;
         private readonly NotePresenters _notePresenters;
         private readonly InputController _inputController;
@@ -22,10 +21,10 @@ namespace App.Presentation.Ingame.Presenters
         private GameModel _gameModel;
         public NotePresenters NotePresenters => _notePresenters;
 
-        public GamePresenter(IngameViewRoot ingameViewRoot, StatusViewRoot statusViewRoot,
+        public GamePresenter(InGameViewRoot inGameViewRoot, StatusViewRoot statusViewRoot,
             InputController inputController)
         {
-            _ingameViewRoot = ingameViewRoot;
+            this.inGameViewRoot = inGameViewRoot;
             _statusViewRoot = statusViewRoot;
             _inputController = inputController;
             _notePresenters = new NotePresenters();
@@ -57,7 +56,7 @@ namespace App.Presentation.Ingame.Presenters
             _inputController.LaneStateObserver.Subscribe(HandleInput).AddTo(_inputController);
 
             // 楽曲再生終了時に一回だけハンドラを実行する
-            _ingameViewRoot.EndPlayingEvent
+            inGameViewRoot.EndPlayingEvent
                 .First()
                 .Subscribe(_ => { _gameModel.FinalizeGame(); });
         }
@@ -82,7 +81,7 @@ namespace App.Presentation.Ingame.Presenters
 
         private void ShowPopup(int laneId, JudgementType type)
         {
-            _ingameViewRoot.SpawnFlyingText(laneId, type);
+            inGameViewRoot.SpawnFlyingText(laneId, type);
         }
 
         public void SpawnParticle(int laneId, JudgementType type)
@@ -95,7 +94,7 @@ namespace App.Presentation.Ingame.Presenters
                 _ => 0f
             };
 
-            _ingameViewRoot.SpawnParticle(laneId, amount);
+            inGameViewRoot.SpawnParticle(laneId, amount);
         }
 
         private async UniTask OnGameEnd(GameResultViewModel gameResultViewModel)
@@ -103,9 +102,9 @@ namespace App.Presentation.Ingame.Presenters
             GameManager.GetInstance().AddResultViewModel(gameResultViewModel);
             if (!_gameModel.IsAlive)
             {
-                _ingameViewRoot.PlaySlowEffect();
+                inGameViewRoot.PlaySlowEffect();
             }
-            await _ingameViewRoot.fadeInoutView.PlayFadeOut(CancellationToken.None);
+            await inGameViewRoot.fadeInoutView.PlayFadeOut(CancellationToken.None);
             SceneManager.LoadScene("ResultScene");
         }
     }

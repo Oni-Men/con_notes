@@ -65,7 +65,7 @@ namespace Database.Impl
             await UniTask.WhenAll(tasks);
         }
 
-        public async UniTask<ScenarioRoot> Fetch(string scenarioId)
+        public async UniTask<ScenarioData> Fetch(string scenarioId)
         {
             var ok = _database.All().TryGetValue(scenarioId, out var path);
             if (!ok)
@@ -77,7 +77,7 @@ namespace Database.Impl
             return TryParseScenario(content);
         }
 
-        private static ScenarioRoot TryParseScenario(string csv)
+        private static ScenarioData TryParseScenario(string csv)
         {
             var parser = new YamlScenarioParser();
             return parser.TryParseScenario(csv);

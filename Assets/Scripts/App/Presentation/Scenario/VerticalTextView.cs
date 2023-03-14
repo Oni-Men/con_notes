@@ -17,11 +17,6 @@ namespace App.Presentation.Scenario
         {
             Left, Right, Center
         }
-        
-        private static readonly string[] LineBreakChars =
-        {
-            "\n", new UnicodeEncoding().GetString(new byte[] { 200, 202 })
-        };
 
         private static readonly Vector2 CenterPivot = new Vector2(0.5f, 0.5f);
         private static readonly Vector2 TopRightPivot = new Vector2(1f, 1f);
@@ -54,9 +49,6 @@ namespace App.Presentation.Scenario
         [SerializeField]
         private int fontSize;
 
-        [SerializeField]
-        public bool showImmediately;
-
         private int _textHash = -1;
         private float _width;
 
@@ -83,11 +75,9 @@ namespace App.Presentation.Scenario
         {
             text ??= "";
             var hash = text.GetHashCode();
-            if (hash != _textHash)
-            {
-                _textHash = hash;
-                UpdateText(text, new CancellationTokenSource().Token).Forget();
-            }
+            if (hash == _textHash) return;
+            _textHash = hash;
+            SetTextAsync(text, gameObject.GetCancellationTokenOnDestroy()).Forget();
         }
 
         private void ClearCharList()
@@ -103,12 +93,12 @@ namespace App.Presentation.Scenario
             ClearCharList();
         }
 
-        public async UniTask SetTextAsync(string newText, CancellationToken cancellationToken)
+        public async UniTask SetTextAsync(string newText, CancellationToken cancellationToken, float fadeIn = 0f)
         {
-            await UpdateText(newText, cancellationToken);
+            await UpdateText(newText, cancellationToken, fadeIn);
         }
 
-        private async UniTask UpdateText(string newText, CancellationToken cancellationToken)
+        private async UniTask UpdateText(string newText, CancellationToken cancellationToken, float fadeIn)
         {
             text = newText;
             _textHash = text.GetHashCode();
@@ -137,7 +127,7 @@ namespace App.Presentation.Scenario
                 else
                 {
                     tmpText.alpha = 0;
-                    tmpText.DOFade(1.0f, 1.0f);
+                    tmpText.DOFade(1.0f, fadeIn);
                 }
 
                 switch (c)
@@ -184,16 +174,16 @@ namespace App.Presentation.Scenario
                 {
                     y = rect.yMax;
                     x -= tmpText.fontSize * 1.5f; // 縦書きなので左にずらす
-                    if (!IsLineBreakCharacter(c) || showImmediately)
+                    if (!IsLineBreakCharacter(c))
                     {
                         continue;
                     }
                     var line = sb.ToString().Trim(' ', '\n', '\t');
                     sb.Clear();
                     
-                    var sleepTime = Mathf.Clamp(0.2f * line.Length, 1.5f, 2.5f);
                     if (line.Length != 0)
                     { 
+                        var sleepTime = Mathf.Clamp(0.2f * line.Length, 1.5f, 2.5f);
                         await UniTask.Delay(TimeSpan.FromSeconds(sleepTime), cancellationToken: cancellationToken);
                     }
                 }
@@ -257,7 +247,7 @@ namespace App.Presentation.Scenario
 
         private static bool IsLineBreakCharacter(char c)
         {
-            return LineBreakChars.Contains(c.ToString());
+            return c == '\n';
         }
     }
 }

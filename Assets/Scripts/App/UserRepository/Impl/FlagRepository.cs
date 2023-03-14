@@ -1,6 +1,6 @@
 using Database;
 
-namespace UserRepository.Impl
+namespace App.UserRepository.Impl
 {
     public class FlagRepository : IFlagRepository
     {

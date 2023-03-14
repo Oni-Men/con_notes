@@ -1,4 +1,4 @@
-namespace UserRepository
+namespace App.UserRepository
 {
     public interface IFlagRepository
     {

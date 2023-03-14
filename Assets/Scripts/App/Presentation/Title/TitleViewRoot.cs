@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading;
 using App.Domain;
@@ -27,28 +26,28 @@ namespace App.Presentation.Title
         {
             GameConst.LoadMasterData();
 
-            startButton.OnClickAsObservable().Subscribe(_ => ShowIngameScene().Forget()).AddTo(this);
+            startButton.OnClickAsObservable().Subscribe(_ => ShowInGameScene().Forget()).AddTo(this);
             exitButton.OnClickAsObservable().Subscribe(_ => ExitGame().Forget()).AddTo(this);
 
             GameManager.ShouldPlayCutIn = true;
         }
 
-        private async UniTask ShowIngameScene()
+        private async UniTask ShowInGameScene()
         {
             await fader.PlayFadeOut(CancellationToken.None);
-            SceneManager.LoadScene("IngameScene"); 
+            SceneManager.LoadScene("ScenarioSelectScene");
             var rootGameObjects = SceneManager.GetActiveScene().GetRootGameObjects();
-            var ingameViewRoot = rootGameObjects
-                .Select(go => go.GetComponent<IngameViewRoot>())
+            var inGameViewRoot = rootGameObjects
+                .Select(go => go.GetComponent<InGameViewRoot>())
                 .FirstOrDefault(view => view is not null);
 
-            if (ingameViewRoot is null)
+            if (inGameViewRoot is null)
             {
                 return;
             }
 
-            var param = new IngameViewRoot.IngameViewParam{};
-            ingameViewRoot.Initialize(param);
+            var param = new InGameViewRoot.InGameViewParam{};
+            await inGameViewRoot.Initialize(param);
         }
 
         private async UniTask ExitGame()
