@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -46,7 +47,7 @@ namespace Database.Impl
         }
 
         private readonly SheetScenarioDatabase _database;
-
+        private readonly Dictionary<string, ScenarioData> _scenarioCache;
 
         private GitHubScenarioFetcher(SheetScenarioDatabase database)
         {
@@ -67,6 +68,11 @@ namespace Database.Impl
 
         public async UniTask<ScenarioData> Fetch(string scenarioId)
         {
+            if (_scenarioCache.ContainsKey(scenarioId))
+            {
+                return _scenarioCache[scenarioId];
+            }
+            
             var ok = _database.All().TryGetValue(scenarioId, out var path);
             if (!ok)
             {
@@ -74,7 +80,10 @@ namespace Database.Impl
             }
 
             var content = await FetchContent(path);
-            return TryParseScenario(content);
+            var scenarioData =  TryParseScenario(content);
+
+            _scenarioCache[scenarioId] = scenarioData;
+            return scenarioData;
         }
 
         private static ScenarioData TryParseScenario(string csv)
