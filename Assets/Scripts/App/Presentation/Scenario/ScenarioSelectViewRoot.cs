@@ -33,21 +33,12 @@ namespace App.Presentation.Scenario
                 return;
             }
 
-            await SceneManager.LoadSceneAsync("ScenarioScene");
-            var rootGameObjects = SceneManager.GetActiveScene().GetRootGameObjects();
-            var scenarioViewRoot = rootGameObjects
-                .Select(go => go.GetComponent<ScenarioViewRoot>())
-                .FirstOrDefault(view => view is not null);
-
-            if (scenarioViewRoot is null)
+            await PageManager.PushAsync("ScenarioScene", () =>
             {
-                Debug.Log("Failed to load scene view");
-                return;
-            }
-            
-            scenarioViewRoot.Initialize(new ScenarioViewRoot.ScenarioViewParam()
-            {
-                scenarioData = scenarioData
+                PageManager.GetComponent<ScenarioViewRoot>()?.Initialize(new ScenarioViewRoot.ScenarioViewParam()
+                {
+                    scenarioData = scenarioData
+                });
             });
         }
 

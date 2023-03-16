@@ -127,7 +127,7 @@ namespace App.Presentation.Scenario
                 else
                 {
                     tmpText.alpha = 0;
-                    tmpText.DOFade(1.0f, fadeIn);
+                    tmpText.DOFade(1.0f, fadeIn).ToUniTask(cancellationToken: cancellationToken).Forget();
                 }
 
                 switch (c)

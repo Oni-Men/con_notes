@@ -3,10 +3,11 @@ using System.Linq;
 using App.Application;
 using App.Domain;
 using App.Domain.Ingame.Enums;
+using App.Presentation.Ingame.Views;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UniRx;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace App.Presentation.Result
@@ -27,29 +28,30 @@ namespace App.Presentation.Result
 
         [SerializeField] private AudioClip successBgm;
         [SerializeField] private AudioClip failBgm;
+
+        [SerializeField]
+        private string songDirectoryPath;
         
-        void OnEnable()
+        public void Initialize(GameResultViewModel resultViewModel)
         {
-            var gameManager = GameManager.GetInstance();
-            var resultViewModel = gameManager.GetResultList().LastOrDefault();
-            
             if (resultViewModel == null)
             {
                 throw new NullReferenceException("result is null.");
             }
-
             // 成功、失敗それぞれの場合に合わせてBGMを鳴らす
             AudioSource.PlayClipAtPoint(resultViewModel.IsSucceed ? successBgm : failBgm, Vector3.zero);
 
             // ボタンのハンドラを登録
-            retryButton.OnClickAsObservable().Subscribe(_ => ShowRetryScene()).AddTo(this);
-            returnButton.OnClickAsObservable().Subscribe(_ => OnReturnButtonClicked()).AddTo(this);
+            retryButton.OnClickAsObservable().Subscribe(_ => OnClickRetryButton().Forget()).AddTo(this);
+            returnButton.OnClickAsObservable().Subscribe(_ => OnReturnButtonClicked().Forget()).AddTo(this);
             
             SetResultViewModel(resultViewModel);
         }
 
         private void SetResultViewModel(GameResultViewModel resultViewModel)
         {
+            songDirectoryPath = resultViewModel.SongDirectoryPath;
+            
             scoreText.text = $"{resultViewModel.Score} ポイント";
             rankText.text = resultViewModel.IsSucceed ? resultViewModel.RankText : "失敗...";
             maxComboText.text = $"{resultViewModel.MaxCombo} コンボ";
@@ -61,15 +63,21 @@ namespace App.Presentation.Result
                   $"{GameConst.EvalNames[JudgementType.Miss]}:\t\t{resultViewModel.EvalCounts[JudgementType.Miss]}";
         } 
 
-        private void ShowRetryScene()
+        private async UniTask OnClickRetryButton()
         {
             GameManager.ShouldPlayCutIn = false;
-            SceneManager.LoadScene("IngameScene", LoadSceneMode.Additive);
+            await PageManager.PushAsync("IngameScene", () =>
+            {
+                PageManager.GetComponent<InGameViewRoot>()?.Initialize(new InGameViewRoot.InGameViewParam()
+                {
+                    songDirectoryPath = songDirectoryPath
+                });
+            });
         }
 
-        private void OnReturnButtonClicked()
+        private async UniTask OnReturnButtonClicked()
         {
-            SceneManager.UnloadSceneAsync("ResultScene");
+            await PageManager.PopAsync();
         }
     }
 }

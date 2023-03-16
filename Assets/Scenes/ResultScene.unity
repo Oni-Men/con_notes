@@ -241,11 +241,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4369755333050245783, guid: d32cc8702e3f85143aeeb1590e059e17, type: 3}
       propertyPath: m_Name
-      value: ExitButton
+      value: ReturnButton
       objectReference: {fileID: 0}
     - target: {fileID: 4369755333236747607, guid: d32cc8702e3f85143aeeb1590e059e17, type: 3}
       propertyPath: m_text
-      value: "\u30BF\u30A4\u30C8\u30EB"
+      value: "\u623B\u308B"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1603,6 +1603,6 @@ MonoBehaviour:
   maxComboText: {fileID: 1028175014}
   evalCountsText: {fileID: 1467439003}
   retryButton: {fileID: 145097134}
-  titleButton: {fileID: 2184943}
+  returnButton: {fileID: 2184943}
   successBgm: {fileID: 8300000, guid: b2640d38dc467fc43b4038e0dcb8c79e, type: 3}
   failBgm: {fileID: 8300000, guid: f3b0718a6b2881c40b6410f6a9cd2587, type: 3}

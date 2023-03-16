@@ -21,6 +21,8 @@ namespace App.Domain.Ingame
         private readonly ReactiveProperty<int> _healthLevel = new();
         private Dictionary<int, LaneState> _laneStates;
 
+        public string SongDirectoryPath => _presenter.SongDirectoryPath;
+        
         public GamePresenter Presenter => _presenter;
         public IReadOnlyDictionary<JudgementType, int> EvalCounts => _evalCounts;
         public IReadOnlyReactiveProperty<int> Score => _score;
@@ -30,7 +32,7 @@ namespace App.Domain.Ingame
         public  IReadOnlyReactiveProperty<int> HealthLevel => _healthLevel;
         public bool IsAlive => _healthLevel.Value > 0;
         private readonly Subject<GameResultViewModel> _gameEndEvent = new();
-        public IObservable<GameResultViewModel> GameEndEvent => _gameEndEvent;
+        public IObservable<GameResultViewModel> GameEndEvent => _gameEndEvent.First().AsObservable();
         
         public GameModel(GamePresenter presenter)
         {

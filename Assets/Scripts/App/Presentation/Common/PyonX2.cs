@@ -16,7 +16,8 @@ namespace App.Presentation.Common
                 .SetLoops(-1, LoopType.Yoyo)
                 .WithCancellation(token);
             await transform.DOLocalMove(pos, 0.5f)
-                .SetEase(Ease.OutQuad);
+                .SetEase(Ease.OutQuad)
+                .WithCancellation(token);
         }
     }
 }

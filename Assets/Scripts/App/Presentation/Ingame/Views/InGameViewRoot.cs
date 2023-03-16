@@ -36,28 +36,19 @@ namespace App.Presentation.Ingame.Views
         private GamePresenter _presenter;
 
         private readonly Subject<Unit> _endPlayingEvent = new();
-        public IObservable<Unit> EndPlayingEvent => _endPlayingEvent;
-
-        void Awake()
-        {
-            _presenter = new GamePresenter(this, statusViewRoot, inputController);
-            _presenter.Initialize();
-
-            Time.timeScale = 1.0f;
-
-            //TODO 必要なくなったら消す
-            Initialize(new InGameViewParam()
-            {
-                songDirectoryPath = "Songs/紅葉の花束"
-            }).Forget();
-        }
+        public IObservable<Unit> EndPlayingEvent => _endPlayingEvent.First();
 
         public async UniTask Initialize(InGameViewParam param)
         {
+            _presenter = new GamePresenter(this, statusViewRoot, inputController);
+            _presenter.Initialize(param);
+
+            Time.timeScale = 1.0f;
             var mapPath = Path.Join(param.songDirectoryPath, "map");
             var playableAsset = Resources.Load<PlayableAsset>(mapPath);
             playableDirector.playableAsset = playableAsset;
 
+            
             // 5秒後に音楽を再生する
             var waitDuration = GameManager.ShouldPlayCutIn ? 5f : 0f;
             await UniTask.Delay(TimeSpan.FromSeconds(waitDuration));
@@ -65,7 +56,10 @@ namespace App.Presentation.Ingame.Views
             playableDirector.Play();
             
             // 音楽の再生が終わったらイベントを発行する
-            playableDirector.stopped += p => { _endPlayingEvent.OnNext(Unit.Default); };
+            playableDirector.stopped += p =>
+            {
+                _endPlayingEvent.OnNext(Unit.Default);
+            };
         }
 
         public void SpawnParticle(int laneId, float amount)
@@ -80,7 +74,6 @@ namespace App.Presentation.Ingame.Views
             {
                 return;
             }
-
             if (noteGenerator.JudgementAndMaterials[type] == null)
             {
                 return;
@@ -95,24 +88,16 @@ namespace App.Presentation.Ingame.Views
             noteGenerator.SpawnFlyingText(pos, text, material);
         }
 
-        public IObservable<long> PlaySlowEffect()
+        public async UniTask PlaySlowEffect(float duration = 1.5f)
         {
             const float interval = 0.1f;
-            const int times = 15;
-            
-            Observable
-                .Interval(TimeSpan.FromSeconds(interval), Scheduler.MainThreadIgnoreTimeScale)
-                .Take(times)
-                .Subscribe(_ => { Time.timeScale *= 0.9f; })
-                .AddTo(this);
-            var timer = Observable.Timer(TimeSpan.FromSeconds(interval * times), Scheduler.MainThreadIgnoreTimeScale);
-            timer.Subscribe(_ =>
+            for (var elapsed = 0f; elapsed < duration; elapsed+=interval)
             {
-                Time.timeScale = 1.0f;
-                playableDirector.Stop();
-            }).AddTo(this);
-
-            return timer;
+                Time.timeScale *= 0.9f;
+                await UniTask.Delay(TimeSpan.FromSeconds(interval), DelayType.Realtime);
+            }
+            Time.timeScale = 1.0f; 
+            playableDirector.Stop();
         }
     }
 }

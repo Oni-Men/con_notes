@@ -5,9 +5,9 @@ using App.Domain;
 using App.Domain.Ingame;
 using App.Domain.Ingame.Enums;
 using App.Presentation.Ingame.Views;
+using App.Presentation.Result;
 using Cysharp.Threading.Tasks;
 using UniRx;
-using UnityEngine.SceneManagement;
 
 namespace App.Presentation.Ingame.Presenters
 {
@@ -20,7 +20,8 @@ namespace App.Presentation.Ingame.Presenters
 
         private GameModel _gameModel;
         public NotePresenters NotePresenters => _notePresenters;
-
+        public string SongDirectoryPath { get; private set; }
+        
         public GamePresenter(InGameViewRoot inGameViewRoot, StatusViewRoot statusViewRoot,
             InputController inputController)
         {
@@ -30,10 +31,13 @@ namespace App.Presentation.Ingame.Presenters
             _notePresenters = new NotePresenters();
         }
 
-        public void Initialize()
+        public void  Initialize(InGameViewRoot.InGameViewParam param)
         {
             _gameModel = GameManager.GetInstance().StartGame(this);
             _notePresenters.Initialize();
+
+            SongDirectoryPath = param.songDirectoryPath;
+            
             Bind();
         }
 
@@ -48,17 +52,17 @@ namespace App.Presentation.Ingame.Presenters
             _gameModel.MaxCombo.Subscribe(maxCombo => _statusViewRoot.UpdateMaxCombo(maxCombo)).AddTo(_statusViewRoot);
             _gameModel.HealthLevel.Subscribe(health => _statusViewRoot.UpdateSlider(health)).AddTo(_statusViewRoot);
 
-            _gameModel.GameEndEvent.First().Subscribe(result =>
-            {
-                OnGameEnd(result).Forget();
-            });
+            _gameModel.GameEndEvent.Subscribe(HandleOnGameEnd);
 
             _inputController.LaneStateObserver.Subscribe(HandleInput).AddTo(_inputController);
 
             // 楽曲再生終了時に一回だけハンドラを実行する
-            inGameViewRoot.EndPlayingEvent
-                .First()
-                .Subscribe(_ => { _gameModel.FinalizeGame(); });
+            inGameViewRoot.EndPlayingEvent.Subscribe(_ => { _gameModel.FinalizeGame(); });
+        }
+
+        private async void HandleOnGameEnd(GameResultViewModel result)
+        {
+            await OnGameEnd(result);
         }
 
         private void HandleInput(InputController.LaneStateData laneState)
@@ -100,12 +104,14 @@ namespace App.Presentation.Ingame.Presenters
         private async UniTask OnGameEnd(GameResultViewModel gameResultViewModel)
         {
             GameManager.GetInstance().AddResultViewModel(gameResultViewModel);
-            if (!_gameModel.IsAlive)
+
+            var duration = 1.5f;
+            var slowTask = _gameModel.IsAlive ? UniTask.CompletedTask : inGameViewRoot.PlaySlowEffect(duration);
+            await slowTask;
+            await PageManager.ReplaceAsync("ResultScene", () =>
             {
-                inGameViewRoot.PlaySlowEffect();
-            }
-            await inGameViewRoot.fadeInoutView.PlayFadeOut(CancellationToken.None);
-            SceneManager.LoadScene("ResultScene");
+                PageManager.GetComponent<ResultRootView>()?.Initialize(gameResultViewModel);
+            });
         }
     }
 }

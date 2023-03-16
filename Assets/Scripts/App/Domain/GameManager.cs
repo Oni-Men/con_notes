@@ -2,19 +2,18 @@ using System.Collections.Generic;
 using App.Application;
 using App.Domain.Ingame;
 using App.Presentation.Ingame.Presenters;
-using UnityEngine;
 
 namespace App.Domain
 {
     public class GameManager
     {
-        private static GameManager _instance = new GameManager();
+        public static GameManager Instance { get; } = new GameManager();
 
-        public static bool ShouldPlayCutIn = true;
+        public static bool ShouldPlayCutIn = false;
 
         public static GameManager GetInstance()
         {
-            return _instance;
+            return Instance;
         }
 
         public GameModel CurrentGame { get; private set; }

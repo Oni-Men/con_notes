@@ -3,6 +3,9 @@ using System.Threading;
 using App.Domain.Scenario;
 using App.Presentation.Ingame.Views;
 using Cysharp.Threading.Tasks;
+using UniRx;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -41,13 +44,15 @@ namespace App.Presentation.Scenario
                 await _scenarioView.ClearScene(source.Token);
                 await _scenarioView.ShowText(page, source.Token);
 
-                _scenarioView.JumpNextButton(source.Token).Forget();
-                await _scenarioView.WaitForClickNextButton(source.Token);
-                
                 foreach (var command in page.commands)
                 {
+                    _scenarioView.JumpNextButton(source.Token).Forget();
+                    await _scenarioView.WaitForClickNextButton(source.Token);
                     await ProcessCommand(command);
                 }
+                
+                _scenarioView.JumpNextButton(source.Token).Forget();
+                await _scenarioView.WaitForClickNextButton(source.Token);
                 
                 source.Cancel();
             }
@@ -70,12 +75,8 @@ namespace App.Presentation.Scenario
 
         private async UniTask PlaySong(string songPath)
         {
-            await SceneManager.LoadSceneAsync("IngameScene", LoadSceneMode.Additive);
-            var rootGameObjects = SceneManager.GetActiveScene().GetRootGameObjects();
-            var inGameViewRoot = rootGameObjects
-                .Select(go => go.GetComponent<InGameViewRoot>())
-                .FirstOrDefault(view => view is not null);
-
+            await PageManager.PushAsync("IngameScene");
+            var inGameViewRoot = PageManager.GetComponent<InGameViewRoot>();
             if (inGameViewRoot is null)
             {
                 return;
@@ -86,6 +87,8 @@ namespace App.Presentation.Scenario
                 songDirectoryPath = songPath
             };
             await inGameViewRoot.Initialize(param);
+            // await UniTask.WaitUntil(() => inGameViewRoot.IsDestroyed());
+
         }
 
         private async UniTask OnScenarioEnd()
@@ -93,24 +96,8 @@ namespace App.Presentation.Scenario
             Debug.Log("シナリオ終了");
             Debug.Log(scenarioData.songPath);
 
-            if (string.IsNullOrEmpty(scenarioData.songPath))
-            {
-                return;
-            }
+            await PageManager.PopAsync();
 
-            SceneManager.LoadScene("ScenarioScene");
-            var rootGameObjects = SceneManager.GetActiveScene().GetRootGameObjects();
-            var ingameViewRoot = rootGameObjects
-                .Select(go => go.GetComponent<InGameViewRoot>())
-                .FirstOrDefault(view => view is not null);
-
-            if (ingameViewRoot is null)
-            {
-                return;
-            }
-
-            var param = new InGameViewRoot.InGameViewParam{};
-            await ingameViewRoot.Initialize(param);
         }
 
     }

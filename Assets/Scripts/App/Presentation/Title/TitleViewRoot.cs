@@ -3,10 +3,10 @@ using System.Threading;
 using App.Domain;
 using App.Presentation.Common;
 using App.Presentation.Ingame.Views;
+using App.Presentation.Scenario;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace App.Presentation.Title
@@ -26,28 +26,16 @@ namespace App.Presentation.Title
         {
             GameConst.LoadMasterData();
 
-            startButton.OnClickAsObservable().Subscribe(_ => ShowInGameScene().Forget()).AddTo(this);
+            startButton.OnClickAsObservable().Subscribe(_ => ShowScenarioSelectScene().Forget()).AddTo(this);
             exitButton.OnClickAsObservable().Subscribe(_ => ExitGame().Forget()).AddTo(this);
 
-            GameManager.ShouldPlayCutIn = true;
+            GameManager.ShouldPlayCutIn = false;
         }
 
-        private async UniTask ShowInGameScene()
+        private async UniTask ShowScenarioSelectScene()
         {
             await fader.PlayFadeOut(CancellationToken.None);
-            SceneManager.LoadScene("ScenarioSelectScene");
-            var rootGameObjects = SceneManager.GetActiveScene().GetRootGameObjects();
-            var inGameViewRoot = rootGameObjects
-                .Select(go => go.GetComponent<InGameViewRoot>())
-                .FirstOrDefault(view => view is not null);
-
-            if (inGameViewRoot is null)
-            {
-                return;
-            }
-
-            var param = new InGameViewRoot.InGameViewParam{};
-            await inGameViewRoot.Initialize(param);
+            await PageManager.PushAsync("ScenarioSelectScene");
         }
 
         private async UniTask ExitGame()

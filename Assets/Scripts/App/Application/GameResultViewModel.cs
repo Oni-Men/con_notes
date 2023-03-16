@@ -7,6 +7,7 @@ namespace App.Application
 {
     public class GameResultViewModel
     {
+        public readonly string SongDirectoryPath;
         public readonly int Score;
         public readonly int MaxCombo;
         public readonly string RankText;
@@ -15,6 +16,7 @@ namespace App.Application
 
         public GameResultViewModel(GameModel gameModel)
         {
+            SongDirectoryPath = gameModel.SongDirectoryPath;
             Score = gameModel.Score.Value;
             MaxCombo = gameModel.MaxCombo.Value;
             RankText = GameConst.GetRankText(Score);
