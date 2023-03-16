@@ -23,7 +23,7 @@ namespace App.Presentation.Result
 
         [SerializeField] private Button retryButton;
 
-        [SerializeField] private Button titleButton;
+        [SerializeField] private Button returnButton;
 
         [SerializeField] private AudioClip successBgm;
         [SerializeField] private AudioClip failBgm;
@@ -43,7 +43,7 @@ namespace App.Presentation.Result
 
             // ボタンのハンドラを登録
             retryButton.OnClickAsObservable().Subscribe(_ => ShowRetryScene()).AddTo(this);
-            titleButton.OnClickAsObservable().Subscribe(_ => ShowTitleScene()).AddTo(this);
+            returnButton.OnClickAsObservable().Subscribe(_ => OnReturnButtonClicked()).AddTo(this);
             
             SetResultViewModel(resultViewModel);
         }
@@ -64,12 +64,12 @@ namespace App.Presentation.Result
         private void ShowRetryScene()
         {
             GameManager.ShouldPlayCutIn = false;
-            SceneManager.LoadScene("IngameScene");
+            SceneManager.LoadScene("IngameScene", LoadSceneMode.Additive);
         }
 
-        private void ShowTitleScene()
+        private void OnReturnButtonClicked()
         {
-            SceneManager.LoadScene("TitleScene");
+            SceneManager.UnloadSceneAsync("ResultScene");
         }
     }
 }
