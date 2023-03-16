@@ -47,7 +47,7 @@ namespace Database.Impl
         }
 
         private readonly SheetScenarioDatabase _database;
-        private readonly Dictionary<string, ScenarioData> _scenarioCache;
+        private readonly Dictionary<string, ScenarioData> _scenarioCache = new();
 
         private GitHubScenarioFetcher(SheetScenarioDatabase database)
         {
