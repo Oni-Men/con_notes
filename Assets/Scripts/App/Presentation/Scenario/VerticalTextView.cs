@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,9 @@ namespace App.Presentation.Scenario
     {
         public enum TextAlign
         {
-            Left, Right, Center
+            Left,
+            Right,
+            Center
         }
 
         private static readonly Vector2 CenterPivot = new Vector2(0.5f, 0.5f);
@@ -27,7 +30,7 @@ namespace App.Presentation.Scenario
 
         [SerializeField]
         public Transform offsetRoot;
-        
+
         [SerializeField]
         private CanvasGroup canvasGroup;
 
@@ -43,9 +46,9 @@ namespace App.Presentation.Scenario
 
         [SerializeField]
         public TextAlign textAlign;
-        
+
         public string Text => text;
-        
+
         [SerializeField]
         private int fontSize;
 
@@ -109,27 +112,28 @@ namespace App.Presentation.Scenario
             var y = rect.yMax;
             var sb = new StringBuilder();
 
-            foreach (var c in text)
+            // すべての文字の位置を計算, 配置する
+            // 同じタイミングで表示する文字でグループ化する
+            // グループごとに遅延を設定してフェードアニメーションを適応
+            var tmpGroups = new List<List<TMP_Text>> { new() };
+            for (var i = 0; i < text.Length; i++)
             {
+                var c = text[i];
+                var nextChar = i + 1 < text.Length ? text[i + 1] : ' ';
+
                 sb.Append(c);
                 var tmpText = _tmpPool.Get();
+                _charList.Add(tmpText);
 
+                // TMP_Textの設定
                 tmpText.alignment = TextAlignmentOptions.Center;
-                tmpText.rectTransform.sizeDelta = new Vector2(tmpText.fontSize, tmpText.fontSize);
                 tmpText.text = c.ToString();
+                tmpText.alpha = 0;
+
+                // Transformの調整
+                tmpText.rectTransform.sizeDelta = new Vector2(tmpText.fontSize, tmpText.fontSize);
                 tmpText.transform.localScale = Vector3.one;
                 tmpText.rectTransform.pivot = TopRightPivot;
-
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    tmpText.alpha = 1;
-                }
-                else
-                {
-                    tmpText.alpha = 0;
-                    tmpText.DOFade(1.0f, fadeIn).ToUniTask(cancellationToken: cancellationToken).Forget();
-                }
-
                 switch (c)
                 {
                     case '、' or '。':
@@ -152,15 +156,15 @@ namespace App.Presentation.Scenario
                         tmpText.transform.localPosition = new Vector3(x, y, 0);
                         break;
                 }
-
-                _charList.Add(tmpText);
-
+                
+                // 一文字設定したら移動する
                 var needLineBreak = IsLineBreakCharacter(c);
                 if (y - tmpText.fontSize < rect.yMin)
                 {
-                    if (c is '、' or '。')
+                    // 行頭に句読点がこないように
+                    if (nextChar is '、' or '。')
                     {
-                        y += tmpText.fontSize * 0.25f;
+                        // y += tmpText.fontSize * 0.5f;
                         needLineBreak = false;
                     }
                     else
@@ -169,28 +173,40 @@ namespace App.Presentation.Scenario
                     }
                 }
 
+                tmpGroups.Last().Add(tmpText);
+                
                 // 改行するときは y を一番上に、x を一行分ずらす
                 if (needLineBreak)
                 {
                     y = rect.yMax;
                     x -= tmpText.fontSize * 1.5f; // 縦書きなので左にずらす
-                    if (!IsLineBreakCharacter(c))
+                    if (IsLineBreakCharacter(c))
                     {
-                        continue;
-                    }
-                    var line = sb.ToString().Trim(' ', '\n', '\t');
-                    sb.Clear();
-                    
-                    if (line.Length != 0)
-                    { 
-                        var sleepTime = Mathf.Clamp(0.2f * line.Length, 1.5f, 2.5f);
-                        await UniTask.Delay(TimeSpan.FromSeconds(sleepTime), cancellationToken: cancellationToken);
+                        tmpGroups.Add(new List<TMP_Text>());
+                        sb.Clear();
                     }
                 }
                 // 改行しないときは y を一文字分ずらす
                 else
                 {
                     y -= tmpText.fontSize;
+                }
+            }
+
+            foreach (var tmpTexts in tmpGroups)
+            {
+                foreach (var tmpText in tmpTexts)
+                {
+                    tmpText.DOFade(1f, fadeIn);
+                }
+
+                try
+                {
+                    await UniTask.Delay(TimeSpan.FromSeconds(tmpTexts.Count / 8f * fadeIn),
+                        cancellationToken: cancellationToken);
+                }
+                catch (OperationCanceledException e)
+                {
                 }
             }
         }
@@ -201,7 +217,7 @@ namespace App.Presentation.Scenario
             gameObject.SetActive(true);
             await canvasGroup.DOFade(1f, duration);
         }
-        
+
         public async UniTask FadeOut(float duration)
         {
             canvasGroup.alpha = 1f;

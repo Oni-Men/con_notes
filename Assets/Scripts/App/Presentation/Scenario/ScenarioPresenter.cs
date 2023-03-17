@@ -1,13 +1,8 @@
-using System.Linq;
 using System.Threading;
 using App.Domain.Scenario;
 using App.Presentation.Ingame.Views;
 using Cysharp.Threading.Tasks;
-using UniRx;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace App.Presentation.Scenario
 {
@@ -41,9 +36,16 @@ namespace App.Presentation.Scenario
             foreach (var page in scenarioData.pages) 
             {
                 source = new CancellationTokenSource();
+                
                 await _scenarioView.ClearScene(source.Token);
-                await _scenarioView.ShowText(page, source.Token);
+                
+                var showTextTask = _scenarioView.ShowText(page, source.Token);
+                var waitForClickTask = _scenarioView.WaitForClickNextButton(source.Token);
 
+                await UniTask.WhenAny(showTextTask, waitForClickTask);
+                source.Cancel();
+                source = new CancellationTokenSource();
+                
                 foreach (var command in page.commands)
                 {
                     _scenarioView.JumpNextButton(source.Token).Forget();
@@ -87,8 +89,6 @@ namespace App.Presentation.Scenario
                 songDirectoryPath = songPath
             };
             await inGameViewRoot.Initialize(param);
-            // await UniTask.WaitUntil(() => inGameViewRoot.IsDestroyed());
-
         }
 
         private async UniTask OnScenarioEnd()
