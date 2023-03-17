@@ -204,7 +204,7 @@ namespace App.Presentation.Scenario
                     await UniTask.Delay(TimeSpan.FromSeconds(tmpTexts.Count / 8f * fadeIn),
                         cancellationToken: cancellationToken);
                 }
-                catch (OperationCanceledException e)
+                catch (OperationCanceledException _)
                 {
                 }
             }
