@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputController: {fileID: 2094658461}
   statusViewRoot: {fileID: 668355102}
-  noteGenerator: {fileID: 1147410753}
+  objectGenerator: {fileID: 1147410753}
   playableDirector: {fileID: 1445846908}
   mapleEffectPrefab: {fileID: 617983637099104657, guid: 81d848fb4af9ed54b9fb87df464e2c15, type: 3}
   fadeInoutView: {fileID: 1688630607}
@@ -11593,8 +11593,6 @@ PlayableDirector:
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
-  - key: {fileID: -4961478143654315610, guid: 7c1aede3b402b2a448f301967688625c, type: 2}
-    value: {fileID: 0}
   - key: {fileID: 0}
     value: {fileID: 0}
   - key: {fileID: 0}
@@ -11603,8 +11601,6 @@ PlayableDirector:
     value: {fileID: 0}
   - key: {fileID: 0}
     value: {fileID: 0}
-  - key: {fileID: 6139221213090861502, guid: 7c1aede3b402b2a448f301967688625c, type: 2}
-    value: {fileID: 1147410752}
   m_ExposedReferences:
     m_References:
     - 154473a571647bb40b371933d7eaec3a: {fileID: 0}

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using App.Common;
 using App.Domain;
 using App.Domain.Ingame.Enums;
@@ -25,7 +26,7 @@ namespace App.Presentation.Ingame.Views
 
         [SerializeField] private StatusViewRoot statusViewRoot;
 
-        [SerializeField] private Generator noteGenerator;
+        [SerializeField] private Generator objectGenerator;
 
         [SerializeField] private PlayableDirector playableDirector;
 
@@ -48,6 +49,8 @@ namespace App.Presentation.Ingame.Views
             var playableAsset = Resources.Load<PlayableAsset>(mapPath);
             playableDirector.playableAsset = playableAsset;
 
+            var binding = playableAsset.outputs.FirstOrDefault(it => it.streamName == "Midi Animation Track");
+            playableDirector.SetGenericBinding(binding.sourceObject, objectGenerator);
             
             // 5秒後に音楽を再生する
             var waitDuration = GameManager.ShouldPlayCutIn ? 5f : 0f;
@@ -74,7 +77,7 @@ namespace App.Presentation.Ingame.Views
             {
                 return;
             }
-            if (noteGenerator.JudgementAndMaterials[type] == null)
+            if (objectGenerator.JudgementAndMaterials[type] == null)
             {
                 return;
             }
@@ -83,9 +86,9 @@ namespace App.Presentation.Ingame.Views
 
             var pos = new Vector3(laneId, 0, 0);
             var text = GameConst.EvalNames[type];
-            var material = noteGenerator.JudgementAndMaterials[type];
+            var material = objectGenerator.JudgementAndMaterials[type];
 
-            noteGenerator.SpawnFlyingText(pos, text, material);
+            objectGenerator.SpawnFlyingText(pos, text, material);
         }
 
         public async UniTask PlaySlowEffect(float duration = 1.5f)
