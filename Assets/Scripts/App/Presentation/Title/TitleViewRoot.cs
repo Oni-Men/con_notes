@@ -1,9 +1,6 @@
-using System.Linq;
 using System.Threading;
 using App.Domain;
 using App.Presentation.Common;
-using App.Presentation.Ingame.Views;
-using App.Presentation.Scenario;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;

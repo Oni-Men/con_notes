@@ -1,10 +1,8 @@
-using System.Linq;
 using App.Presentation.Common;
 using Cysharp.Threading.Tasks;
 using Database.Impl;
 using UniRx;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace App.Presentation.Scenario
 {

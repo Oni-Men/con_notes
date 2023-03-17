@@ -10,7 +10,6 @@ using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.SceneManagement;
 
 
 namespace App.Presentation.Ingame.Views

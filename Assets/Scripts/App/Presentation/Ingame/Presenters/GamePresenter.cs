@@ -1,4 +1,3 @@
-using System.Threading;
 using App.Application;
 using App.Common;
 using App.Domain;

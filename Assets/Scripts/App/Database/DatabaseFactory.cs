@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using Database.Impl;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Database
 {

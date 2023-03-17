@@ -1,6 +1,4 @@
 using App.Domain.Scenario;
-using Cysharp.Threading.Tasks;
-using Database.Impl;
 using UnityEngine;
 
 namespace App.Presentation.Scenario

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using App.Domain;
 using App.Domain.Ingame.Enums;

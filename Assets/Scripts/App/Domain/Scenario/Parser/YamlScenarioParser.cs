@@ -1,5 +1,4 @@
 using System.IO;
-using Domain.Scenario;
 using Domain.Scenario.Parser;
 using YamlDotNet.Serialization;
 

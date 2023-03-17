@@ -1,5 +1,4 @@
 using App.Domain.Ingame.Enums;
-using UnityEngine;
 
 namespace App.Application.Ingame
 {
