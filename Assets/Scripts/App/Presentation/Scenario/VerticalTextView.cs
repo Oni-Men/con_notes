@@ -208,11 +208,6 @@ namespace App.Presentation.Scenario
             await canvasGroup.DOFade(0f, duration);
             gameObject.SetActive(false);
         }
-        
-        private void OnDisable()
-        {
-            _textHash = -1;
-        }
 
         private TextMeshProUGUI CreateFunc()
         {
@@ -230,6 +225,7 @@ namespace App.Presentation.Scenario
 
         private static void ActionOnGet(TMP_Text tmpText)
         {
+            tmpText.text = "";
             tmpText.enabled = true;
             tmpText.transform.localPosition = new Vector3();
             tmpText.transform.rotation = new Quaternion();
@@ -238,6 +234,7 @@ namespace App.Presentation.Scenario
         private static void ActionOnRelease(TMP_Text tmpText)
         {
             tmpText.enabled = false;
+            tmpText.text = "";
         }
 
         private static void ActionOnDestroy(TMP_Text tmpText)
