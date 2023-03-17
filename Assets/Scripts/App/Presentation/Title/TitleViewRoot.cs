@@ -1,6 +1,4 @@
-using System.Threading;
 using App.Domain;
-using App.Presentation.Common;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
@@ -16,9 +14,6 @@ namespace App.Presentation.Title
         [SerializeField]
         private Button exitButton;
 
-        [SerializeField]
-        private FadeInOutView fader;
-
         void Awake()
         {
             GameConst.LoadMasterData();
@@ -31,14 +26,12 @@ namespace App.Presentation.Title
 
         private async UniTask ShowScenarioSelectScene()
         {
-            await fader.PlayFadeOut(CancellationToken.None);
             await PageManager.PushAsync("ScenarioSelectScene");
         }
 
         private async UniTask ExitGame()
         {
-            await fader.PlayFadeOut(CancellationToken.None);
-            UnityEngine.Application.Quit();
+            await PageManager.PopAsync();
         }
     }
 }

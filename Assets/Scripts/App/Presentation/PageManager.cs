@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,58 +11,103 @@ namespace App.Presentation
 
     public class PageManager
     {
-        private static Stack<string> _pageStack = new ();
-        private static GameObject _fadeView = null;
+        public const string RootSceneName = "RootScene";
+        private static readonly Stack<string> PageStack = new ();
 
+        public static bool IsRootSceneLoaded { get; private set; }
+        private static Scene _rootScene = default;
+        private static RootView _rootView;
+        
         private static void PushActiveIfEmpty()
         {
-            if (_pageStack.Count != 0)
+            if (PageStack.Count != 0)
             {
                 return;
             }
+
+            var activeSceneName = SceneManager.GetActiveScene().name;
+            if (activeSceneName != RootSceneName)
+            {
+                PageStack.Push(activeSceneName);
+            }
+        }
+
+        private static async UniTask LoadRootSceneIfNeeded()
+        {
+            if (IsRootSceneLoaded)
+            {
+                return;
+            }
+
+            var rootSceneExists = false;
             
-            _pageStack.Push(SceneManager.GetActiveScene().name);
+            // Check if a root scene has already loaded or not.
+            for (var i = 0; i < SceneManager.sceneCount; i++)
+            {
+                var scene = SceneManager.GetSceneAt(i);
+                if (scene.name != RootSceneName) continue;
+                _rootScene = scene;
+                rootSceneExists = true;
+            }
+
+            if (!rootSceneExists)
+            {
+                await SceneManager.LoadSceneAsync(RootSceneName, LoadSceneMode.Additive);
+                _rootScene = SceneManager.GetSceneByName(RootSceneName);
+            }
+            
+            IsRootSceneLoaded = true;
+            _rootView = GetComponent<RootView>(_rootScene);
         }
         
         public static async UniTask PushAsync(string sceneName, Action onLoad = null, bool hidePreviousScene = true)
         {
+            await LoadRootSceneIfNeeded();
             PushActiveIfEmpty();
-            
+            await ShowFadeOut();
+            await PushSimplyAsync(sceneName, onLoad, hidePreviousScene);
             await ShowFadeIn();
+        }
+
+        public static async UniTask PushSimplyAsync(string sceneName, Action onLoad = null,
+            bool hidePreviousScene = true)
+        {
             await SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-            if (_pageStack.Count != 0 && hidePreviousScene)
+            if (PageStack.Count != 0 && hidePreviousScene)
             {
-                HideScene(_pageStack.Peek());
+                HideScene(PageStack.Peek());
             }
-            _pageStack.Push(sceneName);
+            PageStack.Push(sceneName);
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
             onLoad?.Invoke();
-            await ShowFadeOut();
         }
 
         public static async UniTask PopAsync(Action onUnload = null)
         {
-            await ShowFadeIn();
-            await SceneManager.UnloadSceneAsync(_pageStack.Pop());
-            if (_pageStack.Count != 0)
+            await LoadRootSceneIfNeeded();
+            PushActiveIfEmpty();
+            await ShowFadeOut();
+            await SceneManager.UnloadSceneAsync(PageStack.Pop());
+            if (PageStack.Count != 0)
             {
-                ShowScene(_pageStack.Peek());
-                SceneManager.SetActiveScene(SceneManager.GetSceneByName(_pageStack.Peek()));
+                ShowScene(PageStack.Peek());
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(PageStack.Peek()));
             }
             onUnload?.Invoke();
-            await ShowFadeOut();
+            await ShowFadeIn();
         }
 
         public static async UniTask ReplaceAsync(string sceneName, Action onLoad = null)
         {
-            if (_pageStack.Count == 0)
+            if (PageStack.Count == 0)
             {
                 throw new Exception("There is no elements in the page stack");
             }
-            await ShowFadeIn();
+            await LoadRootSceneIfNeeded();
+            await ShowFadeOut();
 
-            var unLoadSceneName = _pageStack.Pop();
-            _pageStack.Push(sceneName);
+            var unLoadSceneName = PageStack.Pop();
+            PageStack.Push(sceneName);
             
             var loadTask =  SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive).ToUniTask();
             var unloadTask = SceneManager.UnloadSceneAsync(unLoadSceneName).ToUniTask();
@@ -71,12 +117,16 @@ namespace App.Presentation
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
             onLoad?.Invoke();
             
-            await ShowFadeOut();
+            await ShowFadeIn();
         }
 
         public static T GetComponent<T>() where T : Component
         {
-            var rootGameObjects = SceneManager.GetActiveScene().GetRootGameObjects();
+            return GetComponent<T>(SceneManager.GetActiveScene());
+        }
+        public static T GetComponent<T>(Scene scene) where T : Component
+        {
+            var rootGameObjects = scene.GetRootGameObjects();
             return rootGameObjects
                 .Select(go => go.GetComponent<T>())
                 .FirstOrDefault(view => view is not null);
@@ -102,12 +152,12 @@ namespace App.Presentation
         
         private static async UniTask ShowFadeIn()
         {
-            await UniTask.CompletedTask;
+            await _rootView.PlayFadeIn(CancellationToken.None);
         }
         
         private static async UniTask ShowFadeOut()
         {
-            await UniTask.CompletedTask;
+            await _rootView.PlayFadeOut(CancellationToken.None);
         }
 
     }

@@ -31,8 +31,6 @@ namespace App.Presentation.Ingame.Views
 
         [SerializeField] private ParticleSystem mapleEffectPrefab;
 
-        [SerializeField] public FadeInOutView fadeInoutView;
-
         private GamePresenter _presenter;
 
         private readonly Subject<Unit> _endPlayingEvent = new();
