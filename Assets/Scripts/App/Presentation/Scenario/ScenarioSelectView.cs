@@ -78,7 +78,11 @@ namespace App.Presentation.Scenario
                 await textViews[index].SetTextAsync(text, ct);
             }
         }
-        
+
+        private async UniTask CloseScene()
+        {
+            await PageManager.PopAsync();
+        }
 
         private void Update()
         {
@@ -99,6 +103,11 @@ namespace App.Presentation.Scenario
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 _scenarioSelectEvent.OnNext(_titles[selectIndex]);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                CloseScene().Forget();
             }
         }
     }

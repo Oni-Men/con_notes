@@ -2,6 +2,7 @@ using System.Threading;
 using App.Domain.Scenario;
 using App.Presentation.Ingame.Views;
 using Cysharp.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 
 namespace App.Presentation.Scenario
@@ -19,6 +20,10 @@ namespace App.Presentation.Scenario
         public void Init(ScenarioData scenarioData)
         {
             this.scenarioData = scenarioData;
+            _scenarioView.ScenarioPlayCancelEvent.Subscribe(_ =>
+            {
+                OnScenarioCancelled().Forget();
+            });
         }
 
         public async UniTask StartScenario()
@@ -91,13 +96,16 @@ namespace App.Presentation.Scenario
             await inGameViewRoot.Initialize(param);
         }
 
+        private async UniTask OnScenarioCancelled()
+        {
+            Debug.Log("シナリオ再生キャンセル");
+            await PageManager.PopAsync();
+        }
+        
         private async UniTask OnScenarioEnd()
         {
             Debug.Log("シナリオ終了");
-            Debug.Log(scenarioData.songPath);
-
             await PageManager.PopAsync();
-
         }
 
     }
