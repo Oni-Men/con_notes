@@ -36,6 +36,9 @@ namespace App.Presentation.Ingame.Views
         private readonly Subject<Unit> _endPlayingEvent = new();
         public IObservable<Unit> EndPlayingEvent => _endPlayingEvent.First();
 
+        private Subject<Unit> _togglePauseEvent = new();
+        public IObservable<Unit> TogglePauseEvent => _togglePauseEvent.AsObservable();
+
         public async UniTask Initialize(InGameViewParam param)
         {
             _presenter = new GamePresenter(this, statusViewRoot, inputController);
@@ -60,6 +63,14 @@ namespace App.Presentation.Ingame.Views
             {
                 _endPlayingEvent.OnNext(Unit.Default);
             };
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                _togglePauseEvent.OnNext(Unit.Default);
+            }
         }
 
         public void SpawnParticle(int laneId, float amount)

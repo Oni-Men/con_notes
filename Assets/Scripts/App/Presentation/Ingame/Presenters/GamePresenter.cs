@@ -1,3 +1,4 @@
+using System;
 using App.Application;
 using App.Common;
 using App.Domain;
@@ -20,7 +21,10 @@ namespace App.Presentation.Ingame.Presenters
         private GameModel _gameModel;
         public NotePresenters NotePresenters => _notePresenters;
         public string SongDirectoryPath { get; private set; }
-        
+
+        private ReactiveProperty<bool> _pause = new (false);
+        public IObservable<bool> PauseState;
+
         public GamePresenter(InGameViewRoot inGameViewRoot, StatusViewRoot statusViewRoot,
             InputController inputController)
         {
@@ -51,12 +55,13 @@ namespace App.Presentation.Ingame.Presenters
             _gameModel.MaxCombo.Subscribe(maxCombo => _statusViewRoot.UpdateMaxCombo(maxCombo)).AddTo(_statusViewRoot);
             _gameModel.HealthLevel.Subscribe(health => _statusViewRoot.UpdateSlider(health)).AddTo(_statusViewRoot);
 
-            _gameModel.GameEndEvent.Subscribe(HandleOnGameEnd);
+            _gameModel.GameEndEvent.Subscribe(HandleOnGameEnd).AddTo(inGameViewRoot);
 
             _inputController.LaneStateObserver.Subscribe(HandleInput).AddTo(_inputController);
 
             // 楽曲再生終了時に一回だけハンドラを実行する
-            inGameViewRoot.EndPlayingEvent.Subscribe(_ => { _gameModel.FinalizeGame(); });
+            inGameViewRoot.EndPlayingEvent.Subscribe(_ => { _gameModel.FinalizeGame(); }).AddTo(inGameViewRoot);
+            inGameViewRoot.TogglePauseEvent.Subscribe(_ => _pause.Value = !_pause.Value).AddTo(inGameViewRoot);
         }
 
         private async void HandleOnGameEnd(GameResultViewModel result)
@@ -66,6 +71,11 @@ namespace App.Presentation.Ingame.Presenters
 
         private void HandleInput(InputController.LaneStateData laneState)
         {
+            if (_pause.Value)
+            {
+                return;
+            }
+            
             if (laneState.IsPressed)
             {
                 _gameModel.PressLane(laneState.LaneId);
