@@ -31,7 +31,7 @@ namespace Database.Impl
         }
 
         private static readonly Lazy<string> GitHubAccessToken = new Lazy<string>(() =>
-            File.ReadAllText(Path.Combine(UnityEngine.Application.dataPath, "Config/.github_token")));
+            File.ReadAllText(Path.Combine(Application.dataPath, "Config/.github_token")));
 
         private static GitHubScenarioFetcher _instance;
 
