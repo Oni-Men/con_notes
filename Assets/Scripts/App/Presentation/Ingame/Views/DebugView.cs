@@ -12,21 +12,20 @@ namespace App.Presentation.Ingame.Views
 
         void LateUpdate()
         {
-            var gameManager = GameManager.GetInstance();
-            var game = gameManager.CurrentGame;
-            if (game == null)
-            {
-                _text.text = "Not playing";
-                return;
-            }
-
-            var miss = game.EvalCounts.ContainsKey(JudgementType.Miss) ? game.EvalCounts[JudgementType.Miss]: 0;
-            
-            _text.text = $@"
-Score: {game.Score}
-Miss: {miss}
-Combo: {game.CurrentCombo}
-Max Combo: {game.MaxCombo}";
+//             var game = gameManager.CurrentGame;
+//             if (game == null)
+//             {
+//                 _text.text = "Not playing";
+//                 return;
+//             }
+//
+//             var miss = game.EvalCounts.ContainsKey(JudgementType.Miss) ? game.EvalCounts[JudgementType.Miss]: 0;
+//             
+//             _text.text = $@"
+// Score: {game.Score}
+// Miss: {miss}
+// Combo: {game.CurrentCombo}
+// Max Combo: {game.MaxCombo}";
         }
     }
 }

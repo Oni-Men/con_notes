@@ -1,5 +1,4 @@
 using System;
-using App.Domain;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
@@ -29,11 +28,6 @@ namespace App.Common
         {
             videoObject.gameObject.SetActive(false);
             _videoPlayer.playOnAwake = false;
-        
-            if (GameManager.ShouldPlayCutIn)
-            {
-                PlayCutInVideo();
-            }
         }
 
         private void PlayCutInVideo()

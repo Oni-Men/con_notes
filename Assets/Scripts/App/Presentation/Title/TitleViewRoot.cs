@@ -20,8 +20,6 @@ namespace App.Presentation.Title
 
             startButton.OnClickAsObservable().Subscribe(_ => ShowScenarioSelectScene().Forget()).AddTo(this);
             exitButton.OnClickAsObservable().Subscribe(_ => ExitGame().Forget()).AddTo(this);
-
-            GameManager.ShouldPlayCutIn = false;
         }
 
         private async UniTask ShowScenarioSelectScene()
