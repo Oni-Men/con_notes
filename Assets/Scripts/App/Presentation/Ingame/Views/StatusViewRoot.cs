@@ -21,12 +21,7 @@ namespace App.Presentation.Ingame.Views
                 .DOScale(1.0f, 0.3f)
                 .SetEase(Ease.OutQuint);
         }
-
-        public void UpdateMaxCombo(int maxCombo)
-        {
-            // maxComboText.text = $"最大コンボ: {maxCombo.ToString()}";
-        }
-
+        
         public void UpdateScore(int score)
         {
             scoreText.text = $"{score.ToString()}点";

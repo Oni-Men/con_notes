@@ -105,7 +105,7 @@ namespace App.Domain
                 _evalAndPoints[type] = point;
                 _evalAndThresholds[type] = threshold;
 
-                Debug.Log($"{type}: {name}, {point}, {threshold}");
+                // Debug.Log($"{type}: {name}, {point}, {threshold}");
             }
         }
 
@@ -125,7 +125,7 @@ namespace App.Domain
 
                 _rankAndScores.Add((name, score));
 
-                Debug.Log($"{columns[0]}: {name}, {score}");
+                // Debug.Log($"{columns[0]}: {name}, {score}");
             }
 
             _rankAndScores.Sort((a, b) => b.Item2 - a.Item2);

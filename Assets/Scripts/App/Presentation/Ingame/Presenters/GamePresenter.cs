@@ -8,60 +8,64 @@ using App.Presentation.Ingame.Views;
 using App.Presentation.Result;
 using Cysharp.Threading.Tasks;
 using UniRx;
+using UnityEngine;
 
 namespace App.Presentation.Ingame.Presenters
 {
-    public class GamePresenter
+    public class GamePresenter : IDisposable
     {
-        private readonly InGameViewRoot inGameViewRoot;
+        private readonly InGameViewRoot _inGameViewRoot;
         private readonly StatusViewRoot _statusViewRoot;
-        private readonly NotePresenters _notePresenters;
         private readonly InputController _inputController;
+        private readonly NoteViewPool _noteViewPool;
 
-        private GameModel _gameModel;
-        public NotePresenters NotePresenters => _notePresenters;
+        private GameData gameData;
+        public NotePresenters NotePresenters { get; }
+
         public string SongDirectoryPath { get; private set; }
 
-        private ReactiveProperty<bool> _pause = new (false);
+        private ReactiveProperty<bool> _pause = new(false);
         public IObservable<bool> PauseState;
 
+        public bool IsResultPageDisposed { get; private set; }
+
         public GamePresenter(InGameViewRoot inGameViewRoot, StatusViewRoot statusViewRoot,
-            InputController inputController)
+            InputController inputController, NoteViewPool noteViewPool)
         {
-            this.inGameViewRoot = inGameViewRoot;
+            _inGameViewRoot = inGameViewRoot;
             _statusViewRoot = statusViewRoot;
             _inputController = inputController;
-            _notePresenters = new NotePresenters();
+            _noteViewPool = noteViewPool;
+            NotePresenters = new NotePresenters();
         }
 
-        public void  Initialize(InGameViewRoot.InGameViewParam param)
+        public void Initialize(InGameViewRoot.InGameViewParam param)
         {
-            _gameModel = GameManager.GetInstance().StartGame(this);
-            _notePresenters.Initialize();
+            gameData = new GameData();
+            gameData.Initialize(this);
 
             SongDirectoryPath = param.songDirectoryPath;
-            
+
             Bind();
         }
 
         private void Bind()
         {
-            _gameModel.JudgeNotification.Subscribe(viewModel =>
+            gameData.judgeNotification.Subscribe(viewModel =>
             {
                 ShowPopup(viewModel.LaneId, viewModel.JudgementType);
             });
-            _gameModel.Score.Subscribe(score => _statusViewRoot.UpdateScore(score)).AddTo(_statusViewRoot);
-            _gameModel.CurrentCombo.Subscribe(combo => _statusViewRoot.UpdateCombo(combo)).AddTo(_statusViewRoot);
-            _gameModel.MaxCombo.Subscribe(maxCombo => _statusViewRoot.UpdateMaxCombo(maxCombo)).AddTo(_statusViewRoot);
-            _gameModel.HealthLevel.Subscribe(health => _statusViewRoot.UpdateSlider(health)).AddTo(_statusViewRoot);
+            gameData.Score.Subscribe(score => _statusViewRoot.UpdateScore(score)).AddTo(_statusViewRoot);
+            gameData.CurrentCombo.Subscribe(combo => _statusViewRoot.UpdateCombo(combo)).AddTo(_statusViewRoot);
+            gameData.HealthLevel.Subscribe(health => _statusViewRoot.UpdateSlider(health)).AddTo(_statusViewRoot);
 
-            _gameModel.GameEndEvent.Subscribe(HandleOnGameEnd).AddTo(inGameViewRoot);
+            gameData.GameEndEvent.Subscribe(HandleOnGameEnd).AddTo(_inGameViewRoot);
 
-            _inputController.LaneStateObserver.Subscribe(HandleInput).AddTo(_inputController);
+            _inputController.LaneState.Subscribe(HandleInput).AddTo(_inputController);
 
             // 楽曲再生終了時に一回だけハンドラを実行する
-            inGameViewRoot.EndPlayingEvent.Subscribe(_ => { _gameModel.FinalizeGame(); }).AddTo(inGameViewRoot);
-            inGameViewRoot.TogglePauseEvent.Subscribe(_ => _pause.Value = !_pause.Value).AddTo(inGameViewRoot);
+            _inGameViewRoot.EndPlayingEvent.Subscribe(_ => { gameData.FinalizeGame(); }).AddTo(_inGameViewRoot);
+            _inGameViewRoot.TogglePauseEvent.Subscribe(_ => _pause.Value = !_pause.Value).AddTo(_inGameViewRoot);
         }
 
         private async void HandleOnGameEnd(GameResultViewModel result)
@@ -75,15 +79,9 @@ namespace App.Presentation.Ingame.Presenters
             {
                 return;
             }
-            
-            if (laneState.IsPressed)
+            if (laneState.isPressed)
             {
-                _gameModel.PressLane(laneState.LaneId);
-                _gameModel.DoJudge(laneState.LaneId);
-            }
-            else
-            {
-                _gameModel.ReleaseLane(laneState.LaneId);
+                gameData.DoJudge(laneState.laneId);
             }
         }
 
@@ -92,9 +90,25 @@ namespace App.Presentation.Ingame.Presenters
             _statusViewRoot.UpdateCombo(combo);
         }
 
+        public void SpawnNote(int laneId)
+        {
+            var noteView = _noteViewPool.GetNoteView();
+            var notePresenter = new NotePresenter();
+            notePresenter.Initialize(this, NotePresenters, noteView, laneId);
+        }
+
+        public void DespawnNote(NoteView noteView)
+        {
+            _noteViewPool.ReleaseNoteView(noteView);
+        }
+
         private void ShowPopup(int laneId, JudgementType type)
         {
-            inGameViewRoot.SpawnFlyingText(laneId, type);
+            if (type != JudgementType.Miss)
+            {
+                SpawnParticle(laneId, type);
+            }
+            _inGameViewRoot.SpawnFlyingText(laneId, type);
         }
 
         public void SpawnParticle(int laneId, JudgementType type)
@@ -107,20 +121,44 @@ namespace App.Presentation.Ingame.Presenters
                 _ => 0f
             };
 
-            inGameViewRoot.SpawnParticle(laneId, amount);
+            _inGameViewRoot.SpawnParticle(laneId, amount);
         }
 
         private async UniTask OnGameEnd(GameResultViewModel gameResultViewModel)
         {
             GameManager.GetInstance().AddResultViewModel(gameResultViewModel);
 
-            var duration = 1.5f;
-            var slowTask = _gameModel.IsAlive ? UniTask.CompletedTask : inGameViewRoot.PlaySlowEffect(duration);
+            const float duration = 1.5f;
+            var slowTask = gameData.IsAlive ? UniTask.CompletedTask : _inGameViewRoot.PlaySlowEffect(duration);
             await slowTask;
-            await PageManager.ReplaceAsync("ResultScene", () =>
+            await PageManager.ReplaceAsync("ResultScene", () => OnLoadResult(gameResultViewModel));
+
+            var resultRootView = PageManager.GetComponent<ResultRootView>();
+            try
             {
-                PageManager.GetComponent<ResultRootView>()?.Initialize(gameResultViewModel);
-            });
+                await UniTask.Never(resultRootView.gameObject.GetCancellationTokenOnDestroy());
+            }
+            catch (OperationCanceledException _)
+            {
+            }
+
+            IsResultPageDisposed = true;
+            Debug.Log("aaa");
+        }
+
+        private UniTask OnLoadResult(GameResultViewModel gameResultViewModel)
+        {
+            PageManager.GetComponent<ResultRootView>()?.Initialize(gameResultViewModel); 
+            return UniTask.CompletedTask;
+        }
+
+        public void OnNotePassed(NotePresenter notePresenter)
+        {
+            gameData.ProcessPassedNote(notePresenter);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

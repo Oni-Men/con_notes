@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using App.Domain;
 using App.Domain.Ingame.Enums;
+using App.Presentation.Ingame.Presenters;
 using App.Presentation.Ingame.Views;
 using UnityEngine;
 
@@ -8,21 +9,40 @@ namespace App.Common
 {
     public class Generator : MonoBehaviour
     {
-        [SerializeField] private NoteView prefab;
+        [SerializeField]
+        private NoteViewPool notesPool;
 
-        [SerializeField] private ToriiView toriiPrefab;
+        [SerializeField]
+        private ToriiView toriiPrefab;
 
-        [SerializeField] private FlyingTextView flyingText;
+        [SerializeField]
+        private FlyingTextView flyingText;
 
-        [SerializeField] private Material perfectMaterial;
-        [SerializeField] private Material goodMaterial;
-        [SerializeField] private Material badMaterial;
-        [SerializeField] private Material missMaterial;
+        [SerializeField]
+        private Material perfectMaterial;
+
+        [SerializeField]
+        private Material goodMaterial;
+
+        [SerializeField]
+        private Material badMaterial;
+
+        [SerializeField]
+        private Material missMaterial;
 
         private Dictionary<JudgementType, Material> _judgementAndMaterials;
 
         public IReadOnlyDictionary<JudgementType, Material> JudgementAndMaterials => _judgementAndMaterials;
 
+        private GamePresenter _gamePresenter;
+        
+        public void Initialize(GamePresenter gamePresenter)
+        {
+            _gamePresenter = gamePresenter;
+            
+            notesPool.Initialize();
+        }
+        
         private void Awake()
         {
             _judgementAndMaterials = new Dictionary<JudgementType, Material>()
@@ -34,12 +54,13 @@ namespace App.Common
             };
         }
 
+        /// <summary>
+        /// Midi Signal Receiver からのシグナルをここで受け取る
+        /// </summary>
+        /// <param name="laneId"></param>
         public void SpawnNote(int laneId)
         {
-            var x = laneId * GameConst.NoteWidth;
-            var z = prefab.Speed * GameConst.Lifetime;
-            var position = new Vector3(x, 0.01f, z);
-            Instantiate(prefab, position, Quaternion.identity);
+            _gamePresenter.SpawnNote(laneId);
         }
 
         public void SpawnFlyingText(Vector3 position, string text, Material material)

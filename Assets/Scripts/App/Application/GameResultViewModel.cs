@@ -7,21 +7,21 @@ namespace App.Application
 {
     public class GameResultViewModel
     {
-        public readonly string SongDirectoryPath;
-        public readonly int Score;
-        public readonly int MaxCombo;
-        public readonly string RankText;
-        public readonly bool IsSucceed;
-        public IReadOnlyDictionary<JudgementType, int> EvalCounts;
+        public readonly string songDirectoryPath;
+        public readonly int score;
+        public readonly int maxCombo;
+        public readonly string rankText;
+        public readonly bool isSucceed;
+        public readonly IReadOnlyDictionary<JudgementType, int> evalCounts;
 
-        public GameResultViewModel(GameModel gameModel)
+        public GameResultViewModel(GameData gameData)
         {
-            SongDirectoryPath = gameModel.SongDirectoryPath;
-            Score = gameModel.Score.Value;
-            MaxCombo = gameModel.MaxCombo.Value;
-            RankText = GameConst.GetRankText(Score);
-            IsSucceed = gameModel.IsAlive;
-            EvalCounts = new Dictionary<JudgementType, int>(gameModel.EvalCounts);
+            songDirectoryPath = gameData.SongDirectoryPath;
+            score = gameData.Score.Value;
+            maxCombo = gameData.MaxCombo.Value;
+            rankText = GameConst.GetRankText(score);
+            isSucceed = gameData.IsAlive;
+            evalCounts = new Dictionary<JudgementType, int>(gameData.EvalCounts);
         }
     }
 }

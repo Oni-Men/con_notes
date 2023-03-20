@@ -4,7 +4,6 @@ using System.Linq;
 using App.Common;
 using App.Domain;
 using App.Domain.Ingame.Enums;
-using App.Presentation.Common;
 using App.Presentation.Ingame.Presenters;
 using Cysharp.Threading.Tasks;
 using UniRx;
@@ -21,15 +20,23 @@ namespace App.Presentation.Ingame.Views
             public string songDirectoryPath; //譜面の情報が格納されたディレクトリのパス
         }
 
-        [SerializeField] private InputController inputController;
+        [SerializeField]
+        private InputController inputController;
 
-        [SerializeField] private StatusViewRoot statusViewRoot;
+        [SerializeField]
+        private StatusViewRoot statusViewRoot;
 
-        [SerializeField] private Generator objectGenerator;
+        [SerializeField]
+        private Generator objectGenerator;
 
-        [SerializeField] private PlayableDirector playableDirector;
+        [SerializeField]
+        private PlayableDirector playableDirector;
 
-        [SerializeField] private ParticleSystem mapleEffectPrefab;
+        [SerializeField]
+        private ParticleSystem mapleEffectPrefab;
+
+        [SerializeField]
+        private NoteViewPool noteViewPool;
 
         private GamePresenter _presenter;
 
@@ -39,30 +46,29 @@ namespace App.Presentation.Ingame.Views
         private Subject<Unit> _togglePauseEvent = new();
         public IObservable<Unit> TogglePauseEvent => _togglePauseEvent.AsObservable();
 
-        public async UniTask Initialize(InGameViewParam param)
+        public void Initialize(InGameViewParam param)
         {
-            _presenter = new GamePresenter(this, statusViewRoot, inputController);
+            _presenter = new GamePresenter(this, statusViewRoot, inputController, noteViewPool);
             _presenter.Initialize(param);
+            
+            objectGenerator.Initialize(_presenter);
 
-            Time.timeScale = 1.0f;
             var mapPath = Path.Join(param.songDirectoryPath, "map");
             var playableAsset = Resources.Load<PlayableAsset>(mapPath);
             playableDirector.playableAsset = playableAsset;
 
             var binding = playableAsset.outputs.FirstOrDefault(it => it.streamName == "Midi Animation Track");
             playableDirector.SetGenericBinding(binding.sourceObject, objectGenerator);
-            
-            // 5秒後に音楽を再生する
-            var waitDuration = GameManager.ShouldPlayCutIn ? 5f : 0f;
-            await UniTask.Delay(TimeSpan.FromSeconds(waitDuration));
+
+            // 音楽の再生が終わったらイベントを発行する
+            playableDirector.stopped += p => { _endPlayingEvent.OnNext(Unit.Default); };
+        }
+
+        public void StartGame()
+        {
+            Time.timeScale = 1.0f;
             
             playableDirector.Play();
-            
-            // 音楽の再生が終わったらイベントを発行する
-            playableDirector.stopped += p =>
-            {
-                _endPlayingEvent.OnNext(Unit.Default);
-            };
         }
 
         private void Update()
@@ -85,12 +91,11 @@ namespace App.Presentation.Ingame.Views
             {
                 return;
             }
+
             if (objectGenerator.JudgementAndMaterials[type] == null)
             {
                 return;
             }
-
-            // Debug.Log($"Lane: {laneId}, Type: {type}");
 
             var pos = new Vector3(laneId, 0, 0);
             var text = GameConst.EvalNames[type];
@@ -102,12 +107,13 @@ namespace App.Presentation.Ingame.Views
         public async UniTask PlaySlowEffect(float duration = 1.5f)
         {
             const float interval = 0.1f;
-            for (var elapsed = 0f; elapsed < duration; elapsed+=interval)
+            for (var elapsed = 0f; elapsed < duration; elapsed += interval)
             {
                 Time.timeScale *= 0.9f;
                 await UniTask.Delay(TimeSpan.FromSeconds(interval), DelayType.Realtime);
             }
-            Time.timeScale = 1.0f; 
+
+            Time.timeScale = 1.0f;
             playableDirector.Stop();
         }
     }

@@ -1,56 +1,67 @@
+using System;
 using App.Domain;
-using App.Domain.Ingame;
 using App.Domain.Ingame.Enums;
-using App.Domain.Notes;
 using App.Presentation.Ingame.Views;
-using UniRx;
 
 namespace App.Presentation.Ingame.Presenters
 {
-    public class NotePresenter
+    public class NotePresenter : IDisposable
     {
-        private NoteModelBase _noteModelBase;
         private NoteView _noteView;
 
-        public int LaneId => _noteModelBase.LaneId;
+        public JudgementType Judgement { get; private set; }
+        
+        public int LaneId { get; private set; }
+
         public float ZPosition => _noteView.transform.position.z;
-        public NoteType Type => _noteModelBase.NoteType;
-        public NotePresenter(NoteView noteView)
+        private GamePresenter _gamePresenter;
+        private NotePresenters _notePresenters;
+        
+        public void Initialize(GamePresenter gamePresenter, NotePresenters notePresenters, NoteView noteView, int laneId)
         {
+            LaneId = laneId;
+            Judgement = JudgementType.NotJudged;
+            
+            _gamePresenter = gamePresenter;
+            _notePresenters = notePresenters;
             _noteView = noteView;
-        }
-
-        public void Initialize()
-        {
-            var game = GameManager.GetInstance().CurrentGame;
-            game?.Presenter.NotePresenters.AddNotePresenter(this);
-            _noteModelBase = new SingleNoteModelBase(_noteView.LaneId);
-            Bind();
-        }
-
-        private void Bind()
-        {
-            Observable.EveryUpdate()
-                .Where(_ => ZPosition < -2)
-                .Subscribe(_ => Dispose())
-                .AddTo(_noteView);
+            notePresenters.AddNotePresenter(this);
+            noteView.Initialize(this);
         }
 
         public JudgementType Judge(float distance)
         {
-            return _noteModelBase.Judge(distance);
+            Judgement =  JudgementType.Miss;
+
+            if (distance < GameConst.EvalAndThresholds[JudgementType.Bad])
+            {
+                Judgement =  JudgementType.Bad;
+            }
+
+            if (distance < GameConst.EvalAndThresholds[JudgementType.Good])
+            {
+                Judgement =  JudgementType.Good;
+            }
+            
+            if (distance < GameConst.EvalAndThresholds[JudgementType.Perfect])
+            {
+                Judgement = JudgementType.Perfect;
+            }
+
+            return Judgement;
         }
 
-        private void Dispose()
+        public void Dispose()
         {
-            var game = GameManager.GetInstance().CurrentGame;
-            game?.Presenter.NotePresenters.RemoveNotePresenter(this);
+            _notePresenters.RemoveNotePresenter(this);
 
-            if (_noteModelBase.Judgement == JudgementType.NotJudged)
+            if (Judgement == JudgementType.NotJudged)
             {
-                game?.ProcessPassedNote(this);
+                _gamePresenter.OnNotePassed(this);
+                Judgement = JudgementType.Miss;
             }
-            _noteView.Dispose();
+
+            _gamePresenter.DespawnNote(_noteView);
         }
     }
 }

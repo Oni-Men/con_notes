@@ -1,5 +1,6 @@
 using System.Threading;
 using App.Domain.Scenario;
+using App.Presentation.Ingame.Presenters;
 using App.Presentation.Ingame.Views;
 using Cysharp.Threading.Tasks;
 using UniRx;
@@ -11,6 +12,7 @@ namespace App.Presentation.Scenario
     {
         private ScenarioData scenarioData;
         private readonly ScenarioView _scenarioView;
+        private GamePresenter gamePresenter;
 
         public ScenarioPresenter(ScenarioView view)
         {
@@ -82,15 +84,17 @@ namespace App.Presentation.Scenario
 
         private async UniTask PlaySong(string songPath)
         {
-            await PageManager.PushAsyncWithFade("IngameScene", OnLoadInGame(songPath));
+            await PageManager.PushAsyncWithFade("IngameScene", () => OnLoadInGame(songPath));
+            var ingameViewRoot = PageManager.GetComponent<InGameViewRoot>();
+            ingameViewRoot.StartGame();
         }
 
-        private async UniTask OnLoadInGame(string songPath)
+        private UniTask OnLoadInGame(string songPath)
         {
             var inGameViewRoot = PageManager.GetComponent<InGameViewRoot>();
             if (inGameViewRoot is null)
             {
-                return;
+                return UniTask.CompletedTask;
             }
 
             var param = new InGameViewRoot.InGameViewParam
@@ -98,7 +102,9 @@ namespace App.Presentation.Scenario
                 songDirectoryPath = songPath
                 // TODO スカイボックスを指定するパラメータを追加
             };
-            await inGameViewRoot.Initialize(param);
+            inGameViewRoot.Initialize(param);
+
+            return UniTask.CompletedTask;
         }
 
         private async UniTask OnScenarioCancelled()

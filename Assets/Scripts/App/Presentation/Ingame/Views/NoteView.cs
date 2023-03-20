@@ -6,28 +6,30 @@ namespace App.Presentation.Ingame.Views
 {
     public class NoteView : MonoBehaviour
     {
-        [SerializeField] private float speed;
-        
-        public NotePresenter Presenter { get; private set; }
+        [SerializeField]
+        private float speed;
 
-        public float Speed => speed;
+        private NotePresenter _notePresenter;
 
-        public int LaneId => (int) (transform.position.x / GameConst.NoteWidth);
-        
-        void Awake()
+        public void Initialize(NotePresenter notePresenter)
         {
-            Presenter = new NotePresenter(this);
-            Presenter.Initialize();
+            _notePresenter = notePresenter;
+
+            var x = notePresenter.LaneId * GameConst.NoteWidth;
+            var z = speed * GameConst.Lifetime;
+
+            var t = transform;
+            t.localPosition = new Vector3(x, 0.01f, z);
+            t.rotation = Quaternion.identity;
         }
 
         void Update()
         {
             transform.Translate(0, 0, Time.deltaTime * -speed);
-        }
-
-        public void Dispose()
-        {
-            Destroy(gameObject);
+            if (transform.localPosition.z < -2)
+            {
+                _notePresenter.Dispose();
+            }
         }
     }
 }

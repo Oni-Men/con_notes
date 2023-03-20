@@ -38,7 +38,7 @@ namespace App.Presentation.Result
                 throw new NullReferenceException("result is null.");
             }
             // 成功、失敗それぞれの場合に合わせてBGMを鳴らす
-            AudioSource.PlayClipAtPoint(resultViewModel.IsSucceed ? successBgm : failBgm, Vector3.zero);
+            AudioSource.PlayClipAtPoint(resultViewModel.isSucceed ? successBgm : failBgm, Vector3.zero);
 
             // ボタンのハンドラを登録
             retryButton.OnClickAsObservable().Subscribe(_ => OnClickRetryButton().Forget()).AddTo(this);
@@ -49,28 +49,32 @@ namespace App.Presentation.Result
 
         private void SetResultViewModel(GameResultViewModel resultViewModel)
         {
-            songDirectoryPath = resultViewModel.SongDirectoryPath;
+            songDirectoryPath = resultViewModel.songDirectoryPath;
             
-            scoreText.text = $"{resultViewModel.Score} ポイント";
-            rankText.text = resultViewModel.IsSucceed ? resultViewModel.RankText : "失敗...";
-            maxComboText.text = $"{resultViewModel.MaxCombo} コンボ";
+            scoreText.text = $"{resultViewModel.score} ポイント";
+            rankText.text = resultViewModel.isSucceed ? resultViewModel.rankText : "失敗...";
+            maxComboText.text = $"{resultViewModel.maxCombo} コンボ";
 
             evalCountsText.text
-                = $"{GameConst.EvalNames[JudgementType.Perfect]}:\t\t{resultViewModel.EvalCounts[JudgementType.Perfect]}\n" +
-                  $"{GameConst.EvalNames[JudgementType.Good]}:\t\t{resultViewModel.EvalCounts[JudgementType.Good]}\n" +
-                  $"{GameConst.EvalNames[JudgementType.Bad]}:\t\t{resultViewModel.EvalCounts[JudgementType.Bad]}\n" +
-                  $"{GameConst.EvalNames[JudgementType.Miss]}:\t\t{resultViewModel.EvalCounts[JudgementType.Miss]}";
+                = $"{GameConst.EvalNames[JudgementType.Perfect]}:\t\t{resultViewModel.evalCounts[JudgementType.Perfect]}\n" +
+                  $"{GameConst.EvalNames[JudgementType.Good]}:\t\t{resultViewModel.evalCounts[JudgementType.Good]}\n" +
+                  $"{GameConst.EvalNames[JudgementType.Bad]}:\t\t{resultViewModel.evalCounts[JudgementType.Bad]}\n" +
+                  $"{GameConst.EvalNames[JudgementType.Miss]}:\t\t{resultViewModel.evalCounts[JudgementType.Miss]}";
         } 
 
         private async UniTask OnClickRetryButton()
         {
-            await PageManager.PushAsyncWithFade("IngameScene", () =>
+            await PageManager.ReplaceAsync("IngameScene", () =>
             {
                 PageManager.GetComponent<InGameViewRoot>()?.Initialize(new InGameViewRoot.InGameViewParam()
                 {
                     songDirectoryPath = songDirectoryPath
                 });
+                return UniTask.CompletedTask;
             });
+            
+            var ingameViewRoot = PageManager.GetComponent<InGameViewRoot>();
+            ingameViewRoot.StartGame();
         }
 
         private async UniTask OnReturnButtonClicked()

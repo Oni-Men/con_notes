@@ -24,7 +24,7 @@ namespace App.Presentation
             // Load TitleScene if not loaded.
             if (SceneManager.sceneCount == 1 && SceneManager.GetActiveScene().name == PageManager.RootSceneName)
             {
-                await PageManager.PushAsync("TitleScene", UniTask.CompletedTask);
+                await PageManager.PushAsync("TitleScene");
             }
         }
 

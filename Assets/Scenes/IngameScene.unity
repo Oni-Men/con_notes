@@ -157,6 +157,7 @@ MonoBehaviour:
   objectGenerator: {fileID: 1147410753}
   playableDirector: {fileID: 1445846908}
   mapleEffectPrefab: {fileID: 617983637099104657, guid: 81d848fb4af9ed54b9fb87df464e2c15, type: 3}
+  noteViewPool: {fileID: 649646618}
 --- !u!4 &119832313
 Transform:
   m_ObjectHideFlags: 0
@@ -5760,6 +5761,51 @@ ParticleSystemForceField:
         m_RotationOrder: 4
     m_MultiplyDragByParticleSize: 1
     m_MultiplyDragByParticleVelocity: 1
+--- !u!1 &649646617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 649646619}
+  - component: {fileID: 649646618}
+  m_Layer: 0
+  m_Name: NotesPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &649646618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649646617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cada87086c2e41e7be2d2101d6e9b073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notePrefab: {fileID: 2868984282514854962, guid: f1c4e90f100801246ac9bc38e8a7d473, type: 3}
+--- !u!4 &649646619
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649646617}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &668355100
 GameObject:
   m_ObjectHideFlags: 0
@@ -6235,10 +6281,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1147410754}
   - component: {fileID: 1147410753}
-  - component: {fileID: 1147410756}
-  - component: {fileID: 1147410758}
-  - component: {fileID: 1147410757}
   - component: {fileID: 1147410759}
+  - component: {fileID: 1147410762}
+  - component: {fileID: 1147410761}
+  - component: {fileID: 1147410760}
   m_Layer: 0
   m_Name: ObjectGenerator
   m_TagString: Untagged
@@ -6258,7 +6304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d18dc9bfe53f5a74b9a6d93fbc192e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2868984282514854962, guid: f1c4e90f100801246ac9bc38e8a7d473, type: 3}
+  notesPool: {fileID: 649646618}
   toriiPrefab: {fileID: 8159264899005079384, guid: 75ba658bfd2f4c340805112c88d17bfa, type: 3}
   flyingText: {fileID: 6580153564274336425, guid: 2c5e49a31d2996240bde96e9b4856a41, type: 3}
   perfectMaterial: {fileID: 2100000, guid: d11108a494604f048b7341a067bbd492, type: 2}
@@ -6280,7 +6326,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1147410756
+--- !u!114 &1147410759
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6313,7 +6359,40 @@ MonoBehaviour:
   noteOffEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1147410757
+--- !u!114 &1147410760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147410752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 390e5cebc37d6d7258bdb58f0380f9d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noteFilter:
+    note: 10
+    octave: 0
+  noteOnEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1147410753}
+        m_TargetAssemblyTypeName: App.Common.Generator, Assembly-CSharp
+        m_MethodName: SpawnGate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  noteOffEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1147410761
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6346,7 +6425,7 @@ MonoBehaviour:
   noteOffEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1147410758
+--- !u!114 &1147410762
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6372,39 +6451,6 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  noteOffEvent:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &1147410759
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1147410752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 390e5cebc37d6d7258bdb58f0380f9d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  noteFilter:
-    note: 10
-    octave: 0
-  noteOnEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1147410753}
-        m_TargetAssemblyTypeName: App.Common.Generator, Assembly-CSharp
-        m_MethodName: SpawnGate
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

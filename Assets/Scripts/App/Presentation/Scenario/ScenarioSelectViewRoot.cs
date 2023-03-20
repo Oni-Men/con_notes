@@ -33,10 +33,12 @@ namespace App.Presentation.Scenario
 
             await PageManager.PushAsyncWithFade("ScenarioScene", () =>
             {
-                PageManager.GetComponent<ScenarioViewRoot>()?.Initialize(new ScenarioViewRoot.ScenarioViewParam()
+                var scenarioViewRoot = PageManager.GetComponent<ScenarioViewRoot>();
+                scenarioViewRoot.Initialize(new ScenarioViewRoot.ScenarioViewParam()
                 {
                     scenarioData = scenarioData
                 });
+                return UniTask.CompletedTask;
             });
         }
 

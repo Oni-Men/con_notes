@@ -7,28 +7,18 @@ namespace App.Presentation.Ingame.Presenters
     public class NotePresenters
     {
 
-        private readonly List<NotePresenter> _presenters = new List<NotePresenter>();
-        
-        public IReadOnlyList<NotePresenter> Presenters => _presenters;
-
-        public void Initialize()
-        {
-            Bind();
-        }
-
-        private void Bind()
-        {
-            
-        }
+        private readonly Dictionary<int, List<NotePresenter>> _presenters = new ();
 
         public NotePresenter GetNearestNotePresenter(int laneId)
         {
             //指定されたレーン内にあるノートのプレゼンターを収集
-            var lanePresenters = _presenters
-                .Where(presenter => presenter.LaneId == laneId)
-                .ToList();
-
-            if (!lanePresenters.Any())
+            if (!_presenters.ContainsKey(laneId))
+            {
+                return null;
+            }
+            
+            var lanePresenters = _presenters[laneId];
+            if (lanePresenters.Count == 0)
             {
                 return null;
             }
@@ -40,12 +30,19 @@ namespace App.Presentation.Ingame.Presenters
         
         public void AddNotePresenter(NotePresenter notePresenter)
         {
-            _presenters.Add(notePresenter);
+            if (!_presenters.ContainsKey(notePresenter.LaneId))
+            {
+                _presenters[notePresenter.LaneId] = new List<NotePresenter>();
+            }
+            _presenters[notePresenter.LaneId].Add(notePresenter);
         }
 
         public void RemoveNotePresenter(NotePresenter notePresenter)
         {
-            _presenters.Remove(notePresenter);
+            if (_presenters.ContainsKey(notePresenter.LaneId))
+            {
+                _presenters[notePresenter.LaneId].Remove(notePresenter);
+            }
         }
     }
 }

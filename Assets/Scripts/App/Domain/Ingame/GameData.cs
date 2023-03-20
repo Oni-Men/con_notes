@@ -9,38 +9,32 @@ using UnityEngine;
 
 namespace App.Domain.Ingame
 {
-    public class GameModel
+    public class GameData
     {
         private bool end = false;
         
         private Dictionary<JudgementType, int> _evalCounts;
-        private readonly GamePresenter _presenter;
+        private GamePresenter _presenter;
         private readonly ReactiveProperty<int> _score = new();
         private readonly ReactiveProperty<int> _currentCombo = new();
         private readonly ReactiveProperty<int> _maxCombo = new();
         private readonly ReactiveProperty<int> _healthLevel = new();
-        private Dictionary<int, LaneState> _laneStates;
 
         public string SongDirectoryPath => _presenter.SongDirectoryPath;
         
-        public GamePresenter Presenter => _presenter;
         public IReadOnlyDictionary<JudgementType, int> EvalCounts => _evalCounts;
         public IReadOnlyReactiveProperty<int> Score => _score;
         public IReadOnlyReactiveProperty<int> CurrentCombo => _currentCombo;
         public IReadOnlyReactiveProperty<int> MaxCombo => _maxCombo;
-        public readonly Subject<JudgementViewModel> JudgeNotification = new();
+        public readonly Subject<JudgementViewModel> judgeNotification = new();
         public  IReadOnlyReactiveProperty<int> HealthLevel => _healthLevel;
         public bool IsAlive => _healthLevel.Value > 0;
         private readonly Subject<GameResultViewModel> _gameEndEvent = new();
         public IObservable<GameResultViewModel> GameEndEvent => _gameEndEvent.First().AsObservable();
         
-        public GameModel(GamePresenter presenter)
+        public void Initialize(GamePresenter presenter)
         {
             _presenter = presenter;
-        }
-
-        public void Initialize()
-        {
             _evalCounts = new Dictionary<JudgementType, int>()
             {
                 { JudgementType.Perfect , 0},
@@ -52,12 +46,6 @@ namespace App.Domain.Ingame
             _currentCombo.Value = 0;
             _maxCombo.Value = 0;
             _healthLevel.Value = 100;
-            _laneStates = new Dictionary<int, LaneState>()
-            {
-                { -1, new LaneState() },
-                { 0, new LaneState() },
-                { 1, new LaneState() },
-            };
         }
 
         public void FinalizeGame()
@@ -65,26 +53,6 @@ namespace App.Domain.Ingame
             _maxCombo.Value = Math.Max(_maxCombo.Value, _currentCombo.Value);
             _gameEndEvent.OnNext(new GameResultViewModel(this));
             end = true;
-        }
-
-        public void PressLane(int laneId)
-        {
-            if (!_laneStates.ContainsKey(laneId))
-            {
-                throw new ArgumentException("No such laneId");
-            }
-
-            _laneStates[laneId].Press();
-        }
-
-        public void ReleaseLane(int laneId)
-        {
-            if (!_laneStates.ContainsKey(laneId))
-            {
-                throw new ArgumentException("No such laneId");
-            }
-
-            _laneStates[laneId].Release();
         }
 
         public void DoJudge(int laneId)
@@ -105,31 +73,23 @@ namespace App.Domain.Ingame
             
             var judgementType = nearestNotePresenter.Judge(distance);
             AddJudgement(judgementType);
-            
-            //Debug.Log(judgementType);
 
-            if (judgementType != JudgementType.Miss)
-            {
-                _presenter.SpawnParticle(laneId, judgementType);
-            }
-            
             if (!IsAlive)
             {
                 FinalizeGame();
             }
 
-            JudgeNotification.OnNext(new JudgementViewModel(laneId, judgementType));
+            judgeNotification.OnNext(new JudgementViewModel(laneId, judgementType));
         }
 
         public void ProcessPassedNote(NotePresenter presenter)
         {
             if (end) return;
             AddJudgement(JudgementType.Miss);
-            _presenter.SpawnParticle(presenter.LaneId, JudgementType.Miss);
-            JudgeNotification.OnNext(new JudgementViewModel(presenter.LaneId, JudgementType.Miss));
+            judgeNotification.OnNext(new JudgementViewModel(presenter.LaneId, JudgementType.Miss));
         }
         
-        private void AddJudgement(JudgementType type)
+        public void AddJudgement(JudgementType type)
         {
             if (!IsAlive || end) 
                 return;
