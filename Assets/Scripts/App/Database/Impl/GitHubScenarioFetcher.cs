@@ -29,7 +29,7 @@ namespace Database.Impl
             public string html_url;
             public string download_url;
         }
-        
+
         private static readonly Lazy<string> GitHubAccessToken = new Lazy<string>(() =>
             File.ReadAllText(Path.Combine(UnityEngine.Application.dataPath, "Config/.github_token")));
 
@@ -54,11 +54,15 @@ namespace Database.Impl
             _database = database;
         }
 
+#if UNITY_EDITOR
+
         [MenuItem(itemName: "Tools/Fetch scenarios")]
         public static void FetchAllScenario()
         {
             Instance.FetchAll().Forget();
         }
+
+#endif
 
         public async UniTask FetchAll()
         {
@@ -72,7 +76,7 @@ namespace Database.Impl
             {
                 return _scenarioCache[scenarioId];
             }
-            
+
             var ok = _database.All().TryGetValue(scenarioId, out var path);
             if (!ok)
             {
@@ -80,7 +84,7 @@ namespace Database.Impl
             }
 
             var content = await FetchContent(path);
-            var scenarioData =  TryParseScenario(content);
+            var scenarioData = TryParseScenario(content);
 
             _scenarioCache[scenarioId] = scenarioData;
             return scenarioData;

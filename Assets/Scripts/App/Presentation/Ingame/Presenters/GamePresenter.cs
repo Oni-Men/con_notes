@@ -143,7 +143,6 @@ namespace App.Presentation.Ingame.Presenters
             }
 
             IsResultPageDisposed = true;
-            Debug.Log("aaa");
         }
 
         private UniTask OnLoadResult(GameResultViewModel gameResultViewModel)

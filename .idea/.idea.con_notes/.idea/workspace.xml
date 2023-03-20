@@ -3,33 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="ef82dace-d8a2-4764-909e-b073224b04bb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.con_notes/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.con_notes/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/IngameScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/IngameScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/IngameScene_Profiles/Post-process Volume Profile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/IngameScene_Profiles/Post-process Volume Profile.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/RootScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/RootScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Application/GameResultViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Application/GameResultViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Common/Generator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Common/Generator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Domain/GameConst.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Domain/GameConst.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Domain/Ingame/GameModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Domain/Ingame/GameModel.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Domain/Ingame/NoteModelBase.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Domain/Ingame/NoteModelBase.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Domain/Ingame/SerialNoteModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Domain/Ingame/SerialNoteModel.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Domain/Ingame/SingleNoteModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Domain/Ingame/SingleNoteModel.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Database/Impl/GitHubScenarioFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Database/Impl/GitHubScenarioFetcher.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Presenters/GamePresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Presenters/GamePresenter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Presenters/NotePresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Presenters/NotePresenter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Presenters/NotePresenters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Presenters/NotePresenters.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Views/InGameViewRoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Views/InGameViewRoot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Views/NoteView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Views/NoteView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Views/NoteViewPool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Views/NoteViewPool.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Views/StatusViewRoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Ingame/Views/StatusViewRoot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/PageManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/PageManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Result/ResultRootView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Result/ResultRootView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/RootView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/RootView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Scenario/ScenarioPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Scenario/ScenarioPresenter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Scenario/ScenarioSelectViewRoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/App/Presentation/Scenario/ScenarioSelectViewRoot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +57,14 @@
   }
 }]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+    <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../con;notes_win64\RevolutionProject.exe" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="F:\Unity Projects\con;notes_win64" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
     <configuration name="UnitTests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="F:\Unity Hub\Editor\2022.1.16f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath &quot;F:\Unity Projects\con_notes&quot; -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
@@ -135,7 +119,7 @@
       <workItem from="1678935890755" duration="25959000" />
       <workItem from="1679114038254" duration="11760000" />
       <workItem from="1679222759220" duration="842000" />
-      <workItem from="1679281971832" duration="23547000" />
+      <workItem from="1679281971832" duration="25853000" />
     </task>
     <servers />
   </component>
