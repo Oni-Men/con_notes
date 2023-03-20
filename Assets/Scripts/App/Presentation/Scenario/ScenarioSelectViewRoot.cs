@@ -31,7 +31,7 @@ namespace App.Presentation.Scenario
                 return;
             }
 
-            await PageManager.PushAsync("ScenarioScene", () =>
+            await PageManager.PushAsyncWithFade("ScenarioScene", () =>
             {
                 PageManager.GetComponent<ScenarioViewRoot>()?.Initialize(new ScenarioViewRoot.ScenarioViewParam()
                 {

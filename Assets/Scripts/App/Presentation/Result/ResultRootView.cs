@@ -65,7 +65,7 @@ namespace App.Presentation.Result
         private async UniTask OnClickRetryButton()
         {
             GameManager.ShouldPlayCutIn = false;
-            await PageManager.PushAsync("IngameScene", () =>
+            await PageManager.PushAsyncWithFade("IngameScene", () =>
             {
                 PageManager.GetComponent<InGameViewRoot>()?.Initialize(new InGameViewRoot.InGameViewParam()
                 {

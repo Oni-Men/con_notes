@@ -60,16 +60,32 @@ namespace App.Presentation
             _rootView = GetComponent<RootView>(_rootScene);
         }
 
-        public static async UniTask PushAsync(string sceneName, Action onLoad = null, bool hidePreviousScene = true)
+        public static async UniTask PushAsyncWithFade(string sceneName, UniTask onLoad,
+            bool hidePreviousScene = true)
+        {
+            await PushAsyncWithFadeInternal(sceneName, onLoad, hidePreviousScene);
+        }
+        
+        public static async UniTask PushAsyncWithFade(string sceneName, Action onLoad = null, bool hidePreviousScene = true)
+        {
+            await PushAsyncWithFadeInternal(sceneName, UniTask.Create(() =>
+            {
+                onLoad?.Invoke();
+                return UniTask.CompletedTask;
+            }), hidePreviousScene);
+        }
+
+        private static async UniTask PushAsyncWithFadeInternal(string sceneName, UniTask onLoad,
+            bool hidePreviousScene = true)
         {
             await LoadRootSceneIfNeeded();
             PushActiveIfEmpty();
             await ShowFadeOut();
-            await PushSimplyAsync(sceneName, onLoad, hidePreviousScene);
+            await PushAsync(sceneName, onLoad, hidePreviousScene);
             await ShowFadeIn();
         }
 
-        public static async UniTask PushSimplyAsync(string sceneName, Action onLoad = null,
+        public static async UniTask PushAsync(string sceneName, UniTask onLoad,
             bool hidePreviousScene = true)
         {
             await SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
@@ -80,7 +96,7 @@ namespace App.Presentation
 
             PageStack.Push(sceneName);
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
-            onLoad?.Invoke();
+            await onLoad;
         }
 
         public static async UniTask PopAsync(Action onUnload = null)

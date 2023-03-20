@@ -82,7 +82,11 @@ namespace App.Presentation.Scenario
 
         private async UniTask PlaySong(string songPath)
         {
-            await PageManager.PushAsync("IngameScene");
+            await PageManager.PushAsyncWithFade("IngameScene", OnLoadInGame(songPath));
+        }
+
+        private async UniTask OnLoadInGame(string songPath)
+        {
             var inGameViewRoot = PageManager.GetComponent<InGameViewRoot>();
             if (inGameViewRoot is null)
             {
@@ -92,6 +96,7 @@ namespace App.Presentation.Scenario
             var param = new InGameViewRoot.InGameViewParam
             {
                 songDirectoryPath = songPath
+                // TODO スカイボックスを指定するパラメータを追加
             };
             await inGameViewRoot.Initialize(param);
         }

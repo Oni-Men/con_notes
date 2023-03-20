@@ -26,7 +26,7 @@ namespace App.Presentation.Title
 
         private async UniTask ShowScenarioSelectScene()
         {
-            await PageManager.PushAsync("ScenarioSelectScene");
+            await PageManager.PushAsyncWithFade("ScenarioSelectScene");
         }
 
         private async UniTask ExitGame()
