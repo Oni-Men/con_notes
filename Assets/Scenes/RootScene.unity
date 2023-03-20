@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeInOutView: {fileID: 178875642}
   githubToken: 
-  showPrompt: 1
+  showPrompt: 0
 --- !u!4 &87667348
 Transform:
   m_ObjectHideFlags: 0
