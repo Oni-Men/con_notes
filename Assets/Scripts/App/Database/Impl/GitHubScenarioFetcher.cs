@@ -30,8 +30,10 @@ namespace Database.Impl
             public string download_url;
         }
 
+        public const string ScenarioAccessTokenLocation = "Config/.github_token";
+        
         private static readonly Lazy<string> GitHubAccessToken = new Lazy<string>(() =>
-            File.ReadAllText(Path.Combine(Application.dataPath, "Config/.github_token")));
+            File.ReadAllText(Path.Combine(Application.dataPath, ScenarioAccessTokenLocation)));
 
         private static GitHubScenarioFetcher _instance;
 
