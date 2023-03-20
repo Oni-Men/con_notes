@@ -8,19 +8,19 @@ namespace App.Common
     {
         public class LaneStateData
         {
-            public readonly int LaneId;
-            public readonly bool IsPressed;
+            public readonly int laneId;
+            public readonly bool isPressed;
 
             public LaneStateData(int laneId, bool isPressed)
             {
-                LaneId = laneId;
-                IsPressed = isPressed;
+                this.laneId = laneId;
+                this.isPressed = isPressed;
             }
         }
         
-        private Subject<LaneStateData> _laneState;
+        private readonly Subject<LaneStateData> _laneState = new();
 
-        public IObservable<LaneStateData> LaneStateObserver => _laneState = new();
+        public IObservable<LaneStateData> LaneState => _laneState;
 
         void Update()
         {
