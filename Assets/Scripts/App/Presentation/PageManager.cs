@@ -124,7 +124,7 @@ namespace App.Presentation
             }
         }
 
-        public static async UniTask ReplaceAsync(string sceneName, Action onLoad = null)
+        public static async UniTask ReplaceAsync(string sceneName, UniTask onLoad)
         {
             if (PageStack.Count == 0)
             {
@@ -143,7 +143,7 @@ namespace App.Presentation
             await UniTask.WhenAll(loadTask, unloadTask);
 
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
-            onLoad?.Invoke();
+            await onLoad;
 
             await ShowFadeIn();
         }
