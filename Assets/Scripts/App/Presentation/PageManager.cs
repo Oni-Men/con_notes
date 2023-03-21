@@ -60,7 +60,8 @@ namespace App.Presentation
             _rootView = GetComponent<RootView>(_rootScene);
         }
 
-        public static async UniTask PushAsyncWithFade(string sceneName, Func<UniTask> onLoad = null, bool hidePreviousScene = true)
+        public static async UniTask PushAsyncWithFade(string sceneName, Func<UniTask> onLoad = null,
+            bool hidePreviousScene = true)
         {
             await PushAsyncWithFadeInternal(sceneName, onLoad, hidePreviousScene);
         }
@@ -86,6 +87,7 @@ namespace App.Presentation
 
             PageStack.Push(sceneName);
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+            UseActiveCamera();
 
             if (onLoad != null)
             {
@@ -103,13 +105,14 @@ namespace App.Presentation
             {
                 ShowScene(PageStack.Peek());
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName(PageStack.Peek()));
+                UseActiveCamera();
             }
 
             if (onUnload != null)
             {
                 await onUnload.Invoke();
             }
-            
+
             await ShowFadeIn();
 
             if (PageStack.Count == 0)
@@ -179,6 +182,15 @@ namespace App.Presentation
             {
                 rootGameObject.SetActive(true);
             }
+        }
+
+        private static void UseActiveCamera()
+        {
+            // var activeScene = SceneManager.GetActiveScene();
+            // foreach (var camera in Camera.allCameras)
+            // {
+            //     camera.gameObject.SetActive(camera.scene.Equals(activeScene));
+            // }
         }
 
         private static async UniTask ShowFadeIn()
