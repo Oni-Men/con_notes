@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -100,28 +101,42 @@ namespace App.Presentation
             await LoadRootSceneIfNeeded();
             PushActiveIfEmpty();
             await ShowFadeOut();
-            await SceneManager.UnloadSceneAsync(PageStack.Pop());
-            if (PageStack.Count != 0)
+
+            if (PageStack.Count == 1)
             {
+                var exit = true;
+                //var exit = await _rootView.ShowExitConfirm();
+                if (exit)
+                {
+                    if (onUnload != null)
+                    {
+                        await onUnload.Invoke();
+                    }
+
+                    await UniTask.Delay(TimeSpan.FromSeconds(1f));
+#if UNITY_EDITOR
+                    EditorApplication.isPlaying = false;
+#else
+                    UnityEngine.Application.Quit();
+#endif
+                }
+                else
+                {
+                    await ShowFadeIn();
+                }
+            }
+            else
+            {
+                await SceneManager.UnloadSceneAsync(PageStack.Pop());
                 ShowScene(PageStack.Peek());
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName(PageStack.Peek()));
                 UseActiveCamera();
-            }
+                if (onUnload != null)
+                {
+                    await onUnload.Invoke();
+                }
 
-            if (onUnload != null)
-            {
-                await onUnload.Invoke();
-            }
-
-            await ShowFadeIn();
-
-            if (PageStack.Count == 0)
-            {
-#if UNITY_EDITOR
-                EditorApplication.isPlaying = false;
-#else
-                UnityEngine.Application.Quit();
-#endif
+                await ShowFadeIn();
             }
         }
 

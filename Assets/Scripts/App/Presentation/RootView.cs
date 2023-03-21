@@ -6,7 +6,6 @@ using Cysharp.Threading.Tasks;
 using Database.Impl;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Matrix4x4 = UnityEngine.Matrix4x4;
 
 namespace App.Presentation
 {
@@ -20,6 +19,9 @@ namespace App.Presentation
 
         [SerializeField]
         private bool showPrompt;
+
+        [SerializeField]
+        private PopupDialogueView popupDialogueView;
 
         [SerializeField]
         private float scaleRate = 1f;
@@ -89,6 +91,11 @@ namespace App.Presentation
         public async UniTask PlayFadeOut(CancellationToken ct)
         {
             await fadeInOutView.PlayFadeOut(ct);
+        }
+
+        public async UniTask<bool> ShowExitConfirm()
+        {
+            return await popupDialogueView.ShowPopup("ゲームを終了しますか？", CancellationToken.None);
         }
     }
 }

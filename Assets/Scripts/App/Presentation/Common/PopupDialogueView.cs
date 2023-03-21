@@ -26,11 +26,13 @@ namespace App.Presentation.Common
         private void Start()
         {
             canvasGroup.alpha = 0f;
+            gameObject.SetActive(false);
         }
 
 
         public async UniTask<bool> ShowPopup(string text, CancellationToken cancellationToken, bool showButtons = true)
         {
+            gameObject.SetActive(true);
             buttonOk.gameObject.SetActive(showButtons);
             buttonNg.gameObject.SetActive(showButtons);
             await canvasGroup.DOFade(1.0f, 0.5f).WithCancellation(cancellationToken);

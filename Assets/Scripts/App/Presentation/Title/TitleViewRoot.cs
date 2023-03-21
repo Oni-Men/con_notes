@@ -20,6 +20,15 @@ namespace App.Presentation.Title
 
             startButton.OnClickAsObservable().Subscribe(_ => ShowScenarioSelectScene().Forget()).AddTo(this);
             exitButton.OnClickAsObservable().Subscribe(_ => ExitGame().Forget()).AddTo(this);
+            
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ExitGame().Forget();
+            }
         }
 
         private async UniTask ShowScenarioSelectScene()
