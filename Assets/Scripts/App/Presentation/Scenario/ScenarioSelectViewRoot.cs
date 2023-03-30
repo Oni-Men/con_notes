@@ -1,3 +1,4 @@
+using System;
 using App.Presentation.Common;
 using Cysharp.Threading.Tasks;
 using Database.Impl;
@@ -13,7 +14,7 @@ namespace App.Presentation.Scenario
 
         [SerializeField]
         private ScenarioSelectView scenarioSelectView;
-
+        
         private void Awake()
         {
             scenarioSelectView.ScenarioSelectEvent.Subscribe(id =>
@@ -48,5 +49,23 @@ namespace App.Presentation.Scenario
             await popupView.ShowPopup(text, gameObject.GetCancellationTokenOnDestroy(), showButtons: false);
         }
 
+        private async UniTask CloseScene()
+        {
+            await PageManager.PopAsync();
+        }
+
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                CloseScene().Forget();
+            }
+        }
+
+        public void OnClickCloseButton()
+        {
+            CloseScene().Forget();
+        }
     }
 }

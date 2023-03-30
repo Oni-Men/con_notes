@@ -79,11 +79,6 @@ namespace App.Presentation.Scenario
             }
         }
 
-        private async UniTask CloseScene()
-        {
-            await PageManager.PopAsync();
-        }
-
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -103,11 +98,6 @@ namespace App.Presentation.Scenario
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 _scenarioSelectEvent.OnNext(_titles[selectIndex]);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                CloseScene().Forget();
             }
         }
     }

@@ -17,5 +17,18 @@ namespace App.Presentation.Scenario
         {
             scenarioView.Initialize(param.scenarioData);
         }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                scenarioView.CancelScenarioPlay();
+            }
+        }
+        
+        public void OnClickCloseButton()
+        {
+            scenarioView.CancelScenarioPlay();
+        }
     }
 }

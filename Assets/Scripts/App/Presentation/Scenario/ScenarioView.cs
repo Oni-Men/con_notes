@@ -87,12 +87,9 @@ namespace App.Presentation.Scenario
             await clickEvent.OnInvokeAsync();
         }
 
-        void Update()
+        public void CancelScenarioPlay()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                _scenarioPlayCancelEvent.OnNext(Unit.Default);
-            }
+            _scenarioPlayCancelEvent.OnNext(Unit.Default);
         }
     }
 }
