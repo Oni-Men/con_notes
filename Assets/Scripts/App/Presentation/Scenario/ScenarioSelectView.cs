@@ -45,9 +45,10 @@ namespace App.Presentation.Scenario
         private void CreateTextView()
         {
             var verticalTextView = Instantiate(original, rectTransform);
-            verticalTextView.transform.localScale = Vector3.one;
-            verticalTextView.transform.localPosition = Vector3.zero;
-            verticalTextView.transform.localRotation = Quaternion.identity;
+            var textTransform = verticalTextView.transform;
+            textTransform.localScale = Vector3.one;
+            textTransform.localPosition = Vector3.zero;
+            textTransform.localRotation = Quaternion.identity;
             verticalTextView.textAlign = VerticalTextView.TextAlign.Center;
             verticalTextView.ClearText();
             textViews.Add(verticalTextView);

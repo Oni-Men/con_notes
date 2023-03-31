@@ -1,8 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using App.Presentation.Common;
 using Cysharp.Threading.Tasks;
+using Database;
 using Database.Impl;
+using DG.Tweening;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
 namespace App.Presentation.Scenario
@@ -13,14 +18,46 @@ namespace App.Presentation.Scenario
         private PopupDialogueView popupDialogueView;
 
         [SerializeField]
-        private ScenarioSelectView scenarioSelectView;
-        
-        private void Awake()
+        private GameObject gateObject;
+
+        [SerializeField]
+        private List<ScenarioListItem> scenarioListItems;
+
+        private List<string> scenarioTitles = new();
+
+        private void Start()
         {
-            scenarioSelectView.ScenarioSelectEvent.Subscribe(id =>
+            Initialize();
+            
+            DOTween.Sequence()
+                .Append(gateObject.transform.DOLocalRotate(Vector3.up * 180f, 5f).SetEase(Ease.Linear))
+                .Append(gateObject.transform.DOLocalRotate(Vector3.up * 360f, 5f).SetEase(Ease.Linear))
+                .SetLoops(-1, LoopType.Restart)
+                .WithCancellation(gateObject.GetCancellationTokenOnDestroy());
+        }
+
+        private void Initialize()
+        {
+            var database = DatabaseFactory.ScenarioDatabase;
+            scenarioTitles = database.All().Keys.ToList();
+            
+            // とりあえず表示できる分だけ表示する
+            for (var i = 0; i < scenarioListItems.Count; i++)
             {
-                InitScenarioView(id).Forget();
-            }).AddTo(scenarioSelectView);
+                var item = scenarioListItems[i];
+                if (i >= scenarioTitles.Count)
+                {
+                    item.gameObject.SetActive(false);
+                    break;
+                }
+                var title = scenarioTitles[i];
+                item.SetText(title);
+                item.AsObservable().Subscribe(_ =>
+                {
+                    InitScenarioView(title).Forget();
+                });
+            }
+            
         }
         
         private async UniTask InitScenarioView(string scenarioID)
