@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace App.Presentation.Common
 {
-    public class ScenarioListItem : MonoBehaviour
+    public class ListItem : MonoBehaviour
     {
         [SerializeField]
         private TMP_Text tmpText;

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using App.Database;
 using App.Presentation.Common;
 using Cysharp.Threading.Tasks;
 using Database;
 using Database.Impl;
 using DG.Tweening;
 using UniRx;
-using UniRx.Triggers;
 using UnityEngine;
 
 namespace App.Presentation.Scenario
@@ -22,7 +22,7 @@ namespace App.Presentation.Scenario
         private GameObject gateObject;
 
         [SerializeField]
-        private List<ScenarioListItem> scenarioListItems;
+        private List<ListItem> scenarioListItems;
 
         private List<string> scenarioTitles = new();
 
@@ -49,7 +49,7 @@ namespace App.Presentation.Scenario
                 if (i >= scenarioTitles.Count)
                 {
                     item.gameObject.SetActive(false);
-                    break;
+                    continue;
                 }
                 var title = scenarioTitles[i];
                 item.SetText(title);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Database
@@ -47,6 +48,12 @@ namespace Database
         public IReadOnlyDictionary<string, T> All()
         {
             return ToDict();
+        }
+
+        public T Get(string key)
+        {
+            UpdateDictionary();
+            return _table[key];
         }
 
         public void Put(string key, T value)

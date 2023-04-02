@@ -1,12 +1,14 @@
+using App.Database.Impl;
 using Database.Impl;
 using UnityEngine;
 
-namespace Database
+namespace App.Database
 {
-    public class DatabaseFactory
+    public static class DatabaseFactory
     {
         private static SheetScenarioDatabase _scenarioDatabase = null;
-
+        private static SongDatabase _songDatabase = null;
+        
         public static SheetScenarioDatabase ScenarioDatabase
         {
             get
@@ -17,6 +19,19 @@ namespace Database
                 }
 
                 return _scenarioDatabase;
+            }
+        }
+
+        public static SongDatabase SongDatabase
+        {
+            get
+            {
+                if (_songDatabase == null)
+                {
+                    _songDatabase = Resources.Load<SongDatabase>("Database/SongDatabase");
+                }
+
+                return _songDatabase;
             }
         }
     }
