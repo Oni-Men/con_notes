@@ -201,7 +201,8 @@ namespace App.Presentation.Scenario
 
                 try
                 {
-                    await UniTask.Delay(TimeSpan.FromSeconds(tmpTexts.Count / 8f * fadeIn),
+                    var wait = tmpTexts.Count / 8f * fadeIn;
+                    await UniTask.Delay(TimeSpan.FromSeconds(Mathf.Clamp(wait, 1f, 2.5f)),
                         cancellationToken: cancellationToken);
                 }
                 catch (OperationCanceledException _)
