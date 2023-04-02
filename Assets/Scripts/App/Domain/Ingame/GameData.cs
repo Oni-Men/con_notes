@@ -111,8 +111,8 @@ namespace App.Domain.Ingame
 
             //判定に応じてスコアを加算する
             var point = GetPointForEvaluation(type);
-            var bonus = CalcBonusAmount(point);
-            _score.Value += point + bonus;
+            //var bonus = CalcBonusAmount(point);
+            _score.Value += point;
 
             _presenter.UpdateComboCount(_currentCombo.Value);
         }

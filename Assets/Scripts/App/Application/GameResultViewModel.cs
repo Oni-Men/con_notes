@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using App.Domain;
 using App.Domain.Ingame;
 using App.Domain.Ingame.Enums;
+using UnityEngine;
 
 namespace App.Application
 {
@@ -19,9 +21,16 @@ namespace App.Application
             songDirectoryPath = gameData.SongDirectoryPath;
             score = gameData.Score.Value;
             maxCombo = gameData.MaxCombo.Value;
-            rankText = GameConst.GetRankText(score);
             isSucceed = gameData.IsAlive;
             evalCounts = new Dictionary<JudgementType, int>(gameData.EvalCounts);
+            rankText = GetRank();
+        }
+
+        private string GetRank()
+        {
+            var notes = evalCounts.Values.Sum() * 5f;
+            var rate = score / notes;
+            return GameConst.GetRankText(rate);
         }
     }
 }

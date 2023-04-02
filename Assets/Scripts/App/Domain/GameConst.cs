@@ -43,15 +43,15 @@ namespace App.Domain
                 { JudgementType.Miss, "不可" },
             };
 
-        private static List<(string, int)> _rankAndScores = new()
+        private static List<(string, float)> _rankAndScores = new()
         {
-            ("秀+", 4180),
-            ("秀", 3344),
-            ("優+", 2508),
-            ("優", 1672),
-            ("可+", 836),
-            ("可", 344),
-            ("不可", 0),
+            ("秀+", 0.99f),
+            ("秀", 0.95f),
+            ("優+", 0.9f),
+            ("優", 0.8f),
+            ("可+", 0.7f),
+            ("可", 0.60f),
+            ("不可", 0.0f),
         };
 
         public static IReadOnlyDictionary<JudgementType, int> EvalAndPoints => _evalAndPoints;
@@ -121,19 +121,20 @@ namespace App.Domain
                 }
 
                 var name = columns[1];
-                var score = int.Parse(columns[2]);
+                var score = float.Parse(columns[2]);
 
                 _rankAndScores.Add((name, score));
 
                 // Debug.Log($"{columns[0]}: {name}, {score}");
             }
 
-            _rankAndScores.Sort((a, b) => b.Item2 - a.Item2);
+            _rankAndScores.Sort((a, b) => (int)(b.Item2 - a.Item2));
+            _rankAndScores.Reverse();
         }
 
-        public static string GetRankText(int score)
+        public static string GetRankText(float rate)
         {
-            return _rankAndScores.Find(x => score >= x.Item2).Item1;
+            return _rankAndScores.Find(x => rate >= x.Item2).Item1;
         }
     }
 }
