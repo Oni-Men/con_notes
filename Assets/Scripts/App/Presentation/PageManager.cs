@@ -104,8 +104,7 @@ namespace App.Presentation
 
             if (PageStack.Count == 1)
             {
-                var exit = true;
-                //var exit = await _rootView.ShowExitConfirm();
+                var exit = await _rootView.ShowExitConfirm();
                 if (exit)
                 {
                     if (onUnload != null)

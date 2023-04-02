@@ -3,7 +3,9 @@ using System.Threading;
 using App.Presentation.Scenario;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using TMPro;
 using UniRx;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +17,10 @@ namespace App.Presentation.Common
         private CanvasGroup canvasGroup;
 
         [SerializeField]
-        private VerticalTextView verticalTextView;
+        private Image container;
+
+        [SerializeField]
+        private TMP_Text message;
 
         [SerializeField]
         private Button buttonOk;
@@ -25,18 +30,23 @@ namespace App.Presentation.Common
 
         private void Start()
         {
-            canvasGroup.alpha = 0f;
             gameObject.SetActive(false);
         }
 
-
         public async UniTask<bool> ShowPopup(string text, CancellationToken cancellationToken, bool showButtons = true)
         {
+            canvasGroup.alpha = 0f;
+            container.transform.localScale = Vector3.one * 0.75f;
             gameObject.SetActive(true);
+
             buttonOk.gameObject.SetActive(showButtons);
             buttonNg.gameObject.SetActive(showButtons);
-            await canvasGroup.DOFade(1.0f, 0.5f).WithCancellation(cancellationToken);
-            await verticalTextView.SetTextAsync(text, cancellationToken);
+            message.SetText(text);
+
+            await DOTween.Sequence()
+                .Join(canvasGroup.DOFade(1.0f, 0.3f))
+                .Join(container.transform.DOScale(1.0f, 0.3f).SetEase((Ease.OutBack)));
+
 
             var ok = false;
             var clicked = false;
@@ -55,6 +65,12 @@ namespace App.Presentation.Common
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: cancellationToken);
             }
+            
+            await DOTween.Sequence()
+                .Join(canvasGroup.DOFade(0.0f, 0.3f))
+                .Join(container.transform.DOScale(0.75f, 0.3f).SetEase((Ease.OutBack)));
+
+            gameObject.SetActive(false);
             return ok;
         }
     }

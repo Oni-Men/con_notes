@@ -57,7 +57,6 @@ namespace App.Presentation
             if (showPrompt)
             {
                 GUILayout.BeginArea(area.Value);
-
                 GUILayout.Label("シナリオ取得用のTOKENを入力してください...");
 
                 githubToken = GUILayout.TextField(githubToken, GUILayout.ExpandWidth(true));
