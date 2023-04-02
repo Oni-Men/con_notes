@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using App.Presentation.Common;
 using Cysharp.Threading.Tasks;
 using Database;
@@ -82,8 +83,7 @@ namespace App.Presentation.Scenario
 
         private async UniTask ShowPopupDialogue(string text)
         {
-            var popupView = Instantiate(popupDialogueView);
-            await popupView.ShowPopup(text, gameObject.GetCancellationTokenOnDestroy(), showButtons: false);
+            await popupDialogueView.ShowPopup(text, CancellationToken.None, showButtons:false);
         }
 
         private async UniTask CloseScene()

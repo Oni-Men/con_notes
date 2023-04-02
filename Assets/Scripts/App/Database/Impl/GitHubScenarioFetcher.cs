@@ -86,6 +86,11 @@ namespace Database.Impl
             }
 
             var content = await FetchContent(path);
+            if (content == null)
+            {
+                return null;
+            }
+            
             var scenarioData = TryParseScenario(content);
 
             _scenarioCache[scenarioId] = scenarioData;
@@ -109,11 +114,18 @@ namespace Database.Impl
             req.SetRequestHeader("Authorization", $"token {GitHubAccessToken.Value}");
             req.SetRequestHeader("X-GitHub-Api-Version", "2022-11-28");
 
-            await req.SendWebRequest();
-
-            if (req.responseCode >= 300)
+            try
             {
-                throw new Exception("Failed to fetch download uri");
+                await req.SendWebRequest();
+            }
+            catch (UnityWebRequestException e)
+            {
+                return null;
+            } 
+
+            if (req.error != null) 
+            {
+                return null;
             }
 
             var res = JsonUtility.FromJson<ContentAPIResponse>(req.downloadHandler.text);
