@@ -505,6 +505,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIPoupDialogue
       objectReference: {fileID: 0}
+    - target: {fileID: 4171916020750205741, guid: ee40f4c1576c35645bb4731299e93f6c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4171916020750205746, guid: ee40f4c1576c35645bb4731299e93f6c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

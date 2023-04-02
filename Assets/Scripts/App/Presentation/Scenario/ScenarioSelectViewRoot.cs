@@ -102,5 +102,10 @@ namespace App.Presentation.Scenario
         {
             CloseScene().Forget();
         }
+
+        public void OnClickSongSelectButton()
+        {
+            PageManager.PushAsyncWithFade("SongSelectScene").Forget();
+        }
     }
 }

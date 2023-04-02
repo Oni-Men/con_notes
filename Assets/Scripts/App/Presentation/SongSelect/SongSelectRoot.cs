@@ -78,8 +78,7 @@ namespace App.Presentation.SongSelect
         {
             await PageManager.PopAsync();
         }
-
-
+        
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
