@@ -13,6 +13,12 @@ namespace App.Presentation.Common
         public async UniTask StartPyonX2(CancellationToken token)
         {
             var pos = target.transform.localPosition;
+            var scale = target.transform.localScale;
+            
+            await target.transform.DOPunchScale(Vector3.one * 0.5f, 0.5f, 3)
+                .WithCancellation(token);
+
+            target.transform.localScale = scale;
 
             await target.transform
                 .DOLocalMoveX(-5f, 0.25f)
@@ -31,6 +37,8 @@ namespace App.Presentation.Common
             await target.transform.DOLocalMove(pos, 0.5f)
                 .SetEase(Ease.OutQuad)
                 .WithCancellation(target.GetCancellationTokenOnDestroy());
+
+            target.transform.localPosition = pos;
         }
     }
 }
