@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using App.Database;
@@ -73,6 +72,25 @@ namespace App.Presentation.SongSelect
             inGameViewRoot.Initialize(param);
 
             return UniTask.CompletedTask;
+        }
+        
+        private async UniTask CloseScene()
+        {
+            await PageManager.PopAsync();
+        }
+
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                CloseScene().Forget();
+            }
+        }
+
+        public void OnClickCloseButton()
+        {
+            CloseScene().Forget();
         }
     }
 }
