@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311915, g: 0.3807396, b: 0.35872662, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeInOutView: {fileID: 178875642}
-  githubToken: 
+  githubToken: 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
   showPrompt: 0
   popupDialogueView: {fileID: 1566598098}
   scaleRate: 1

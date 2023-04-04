@@ -86,6 +86,10 @@ namespace App.Domain.Ingame
         {
             if (end) return;
             AddJudgement(JudgementType.Miss);
+            if (!IsAlive)
+            {
+                FinalizeGame();
+            }
             judgeNotification.OnNext(new JudgementViewModel(presenter.LaneId, JudgementType.Miss));
         }
         

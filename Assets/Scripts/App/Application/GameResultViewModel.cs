@@ -26,6 +26,15 @@ namespace App.Application
             rankText = GetRank();
         }
 
+        public GameResultViewModel(int score, int maxCombo, string rankText, bool isSucceed,
+            IReadOnlyDictionary<JudgementType, int> evals)
+        {
+            this.score = score;
+            this.maxCombo = maxCombo;
+            this.rankText = rankText;
+            this.isSucceed = isSucceed; evalCounts = evals;
+        }
+
         private string GetRank()
         {
             var notes = evalCounts.Values.Sum() * 5f;
