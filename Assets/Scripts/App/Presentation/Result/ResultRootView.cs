@@ -125,8 +125,9 @@ namespace App.Presentation.Result
                 .Join(seq2)
                 .Join(seq3)
                 .AppendInterval(interval)
-                .Join(evalsTextGroup.DOFade(1f, duration));
-            
+                .Join(evalsTextGroup.DOFade(1f, duration))
+                .AsyncWaitForCompletion();
+
             isAnimationPlaying = false;
         }
 
